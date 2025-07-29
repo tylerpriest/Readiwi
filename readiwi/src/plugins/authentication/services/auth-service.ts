@@ -236,7 +236,7 @@ class AuthService {
   private createAuthError(message: string, code: string, statusCode?: number): AuthError {
     const error = new Error(message) as AuthError;
     error.code = code;
-    error.statusCode = statusCode;
+    error.statusCode = statusCode || 500;
     return error;
   }
   

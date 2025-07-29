@@ -201,6 +201,10 @@ export interface Footnote {
 export enum BookStatus {
   IMPORTING = 'importing',
   READY = 'ready',
+  READING = 'reading',
+  COMPLETED = 'completed',
+  ON_HOLD = 'on_hold',
+  DROPPED = 'dropped',
   ERROR = 'error',
   UPDATING = 'updating',
   ARCHIVED = 'archived',

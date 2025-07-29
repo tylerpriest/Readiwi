@@ -1,74 +1,7 @@
 import {
   Plugin,
-  ComponentRegistry,
-  RouteRegistry,
-  StoreRegistry,
-  ServiceRegistry,
 } from '@/core/types/plugin';
 
-class EmptyComponentRegistry implements ComponentRegistry {
-  components = new Map<string, React.ComponentType<any>>();
-
-  register(): void {
-    // Default empty implementation
-  }
-
-  get(): React.ComponentType<any> | undefined {
-    return undefined;
-  }
-
-  getAll(): Map<string, React.ComponentType<any>> {
-    return new Map();
-  }
-}
-
-class EmptyRouteRegistry implements RouteRegistry {
-  routes = new Map<string, any>();
-
-  register(): void {
-    // Default empty implementation
-  }
-
-  get(): any {
-    return undefined;
-  }
-
-  getAll(): Map<string, any> {
-    return new Map();
-  }
-}
-
-class EmptyStoreRegistry implements StoreRegistry {
-  stores = new Map<string, any>();
-
-  register(): void {
-    // Default empty implementation
-  }
-
-  get(): any {
-    return undefined;
-  }
-
-  getAll(): Map<string, any> {
-    return new Map();
-  }
-}
-
-class EmptyServiceRegistry implements ServiceRegistry {
-  services = new Map<string, any>();
-
-  register(): void {
-    // Default empty implementation
-  }
-
-  get(): any {
-    return undefined;
-  }
-
-  getAll(): Map<string, any> {
-    return new Map();
-  }
-}
 
 export abstract class BasePlugin implements Plugin {
   public abstract readonly id: string;
@@ -97,20 +30,20 @@ export abstract class BasePlugin implements Plugin {
   }
 
   // Default registry implementations (can be overridden)
-  registerComponents(): ComponentRegistry {
-    return new EmptyComponentRegistry();
+  registerComponents(): Record<string, React.ComponentType<any>> {
+    return {};
   }
 
-  registerRoutes(): RouteRegistry {
-    return new EmptyRouteRegistry();
+  registerRoutes(): Record<string, any> {
+    return {};
   }
 
-  registerStores(): StoreRegistry {
-    return new EmptyStoreRegistry();
+  registerStores(): Record<string, any> {
+    return {};
   }
 
-  registerServices(): ServiceRegistry {
-    return new EmptyServiceRegistry();
+  registerServices(): Record<string, any> {
+    return {};
   }
 
   // Utility method for plugin logging

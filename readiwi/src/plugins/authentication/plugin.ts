@@ -1,4 +1,4 @@
-import { Plugin, ComponentRegistry, RouteRegistry, StoreRegistry, ServiceRegistry } from '@/core/types/plugin';
+import { Plugin } from '@/core/types/plugin';
 import { authService } from './services/auth-service';
 import { useAuthStore } from './stores/auth-store';
 import LoginForm from './components/LoginForm';
@@ -63,14 +63,14 @@ export class AuthenticationPlugin implements Plugin {
     }
   }
 
-  registerComponents(): ComponentRegistry {
+  registerComponents(): Record<string, React.ComponentType<any>> {
     return {
       'auth.AuthChoice': AuthChoice,
       'auth.LoginForm': LoginForm,
     };
   }
 
-  registerRoutes(): RouteRegistry {
+  registerRoutes(): Record<string, any> {
     return {
       '/settings/account': {
         component: 'auth.AuthChoice',
@@ -87,13 +87,13 @@ export class AuthenticationPlugin implements Plugin {
     };
   }
 
-  registerStores(): StoreRegistry {
+  registerStores(): Record<string, any> {
     return {
       auth: useAuthStore,
     };
   }
 
-  registerServices(): ServiceRegistry {
+  registerServices(): Record<string, any> {
     return {
       authService,
     };

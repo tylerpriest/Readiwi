@@ -1,31 +1,19 @@
 import { ComponentType } from 'react';
 
 export interface ComponentRegistry {
-  components: Map<string, ComponentType<any>>;
-  register(name: string, component: ComponentType<any>): void;
-  get(name: string): ComponentType<any> | undefined;
-  getAll(): Map<string, ComponentType<any>>;
+  [key: string]: ComponentType<any>;
 }
 
 export interface RouteRegistry {
-  routes: Map<string, RouteDefinition>;
-  register(path: string, route: RouteDefinition): void;
-  get(path: string): RouteDefinition | undefined;
-  getAll(): Map<string, RouteDefinition>;
+  [key: string]: RouteDefinition;
 }
 
 export interface StoreRegistry {
-  stores: Map<string, any>;
-  register(name: string, store: any): void;
-  get(name: string): any;
-  getAll(): Map<string, any>;
+  [key: string]: any;
 }
 
 export interface ServiceRegistry {
-  services: Map<string, any>;
-  register(name: string, service: any): void;
-  get(name: string): any;
-  getAll(): Map<string, any>;
+  [key: string]: any;
 }
 
 export interface RouteDefinition {

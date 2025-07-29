@@ -3,13 +3,9 @@ import {
   PluginRegistry,
   PluginMetadata,
   PluginStatus,
-  ComponentRegistry,
-  RouteRegistry,
-  StoreRegistry,
-  ServiceRegistry,
 } from '@/core/types/plugin';
 
-class ComponentRegistryImpl implements ComponentRegistry {
+class ComponentRegistryImpl {
   public components = new Map<string, React.ComponentType<any>>();
 
   register(name: string, component: React.ComponentType<any>): void {
@@ -25,7 +21,7 @@ class ComponentRegistryImpl implements ComponentRegistry {
   }
 }
 
-class RouteRegistryImpl implements RouteRegistry {
+class RouteRegistryImpl {
   public routes = new Map<string, any>();
 
   register(path: string, route: any): void {
@@ -41,7 +37,7 @@ class RouteRegistryImpl implements RouteRegistry {
   }
 }
 
-class StoreRegistryImpl implements StoreRegistry {
+class StoreRegistryImpl {
   public stores = new Map<string, any>();
 
   register(name: string, store: any): void {
@@ -57,7 +53,7 @@ class StoreRegistryImpl implements StoreRegistry {
   }
 }
 
-class ServiceRegistryImpl implements ServiceRegistry {
+class ServiceRegistryImpl {
   public services = new Map<string, any>();
 
   register(name: string, service: any): void {
@@ -139,21 +135,21 @@ export class PluginRegistryImpl implements PluginRegistry {
       const services = plugin.registerServices();
 
       // Merge registrations
-      components.getAll().forEach((component, name) => {
+      for (const [name, component] of Object.entries(components)) {
         this.componentRegistry.register(`${pluginId}.${name}`, component);
-      });
+      }
 
-      routes.getAll().forEach((route, path) => {
+      for (const [path, route] of Object.entries(routes)) {
         this.routeRegistry.register(`${pluginId}.${path}`, route);
-      });
+      }
 
-      stores.getAll().forEach((store, name) => {
+      for (const [name, store] of Object.entries(stores)) {
         this.storeRegistry.register(`${pluginId}.${name}`, store);
-      });
+      }
 
-      services.getAll().forEach((service, name) => {
+      for (const [name, service] of Object.entries(services)) {
         this.serviceRegistry.register(`${pluginId}.${name}`, service);
-      });
+      }
 
       this.enabledPlugins.add(pluginId);
       plugin.enabled = true;
@@ -258,19 +254,19 @@ export class PluginRegistryImpl implements PluginRegistry {
     return Array.from(this.pluginMetadata.values());
   }
 
-  getComponentRegistry(): ComponentRegistry {
+  getComponentRegistry(): ComponentRegistryImpl {
     return this.componentRegistry;
   }
 
-  getRouteRegistry(): RouteRegistry {
+  getRouteRegistry(): RouteRegistryImpl {
     return this.routeRegistry;
   }
 
-  getStoreRegistry(): StoreRegistry {
+  getStoreRegistry(): StoreRegistryImpl {
     return this.storeRegistry;
   }
 
-  getServiceRegistry(): ServiceRegistry {
+  getServiceRegistry(): ServiceRegistryImpl {
     return this.serviceRegistry;
   }
 

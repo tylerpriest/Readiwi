@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthUser, LoginCredentials, RegisterData, AuthState } from '../types/auth-types';
+import { AuthUser, LoginCredentials, RegisterData } from '../types/auth-types';
 import { authService } from '../services/auth-service';
 
 interface AuthStoreState {
