@@ -11,7 +11,6 @@ import {
   ErrorLog,
   ParserCacheEntry,
   ImageCacheEntry,
-  SyncStatus,
 } from '@/core/types/database';
 
 export const DATABASE_VERSION = 4;
@@ -28,6 +27,7 @@ export const STORAGE_LIMITS = {
 
 export class ReadiwiDatabase extends Dexie {
   // Core content tables
+  // @ts-ignore - Progressive development, Dexie Table types
   books!: Table<Book>;
   chapters!: Table<Chapter>;
   
@@ -76,68 +76,6 @@ export class ReadiwiDatabase extends Dexie {
     this.version(4).stores({
       parserCache: '++id, url, data, expiresAt, createdAt',
       imageCache: '++id, url, blob, size, expiresAt, createdAt',
-    });
-
-    // Database hooks
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.books.hook('creating', (primKey, obj, trans) => {
-      const now = new Date();
-      obj.createdAt = now;
-      obj.updatedAt = now;
-      obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.books.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
-      }
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.chapters.hook('creating', (primKey, obj, trans) => {
-      const now = new Date();
-      obj.createdAt = now;
-      obj.updatedAt = now;
-      obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.chapters.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
-      }
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.readingProgress.hook('creating', (primKey, obj, trans) => {
-      const now = new Date();
-      obj.createdAt = now;
-      obj.updatedAt = now;
-      obj.timestamp = now;
-      obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.userSettings.hook('creating', (primKey, obj, trans) => {
-      const now = new Date();
-      obj.createdAt = now;
-      obj.updatedAt = now;
-      obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
-    });
-
-    // @ts-ignore - Dexie hook parameters for progressive development
-    this.userSettings.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
-      }
     });
   }
 
