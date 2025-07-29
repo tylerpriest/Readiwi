@@ -1,4 +1,4 @@
-# Narrato v4.0 - Complete Implementation Tasks
+# Readiwi v4.0 - Complete Implementation Tasks
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  
@@ -7,7 +7,7 @@
 
 ## Overview
 
-This document breaks down the implementation of Narrato into discrete, manageable tasks that can be executed autonomously by AI agents. Tasks are organized by priority and dependencies, with each task including specific acceptance criteria and validation requirements.
+This document breaks down the implementation of Readiwi into discrete, manageable tasks that can be executed autonomously by AI agents. Tasks are organized by priority and dependencies, with each task including specific acceptance criteria and validation requirements.
 
 ## Implementation Strategy
 
@@ -49,7 +49,7 @@ Comprehensive testing, performance optimization, and production readiness.
   - _Validation: All test frameworks run successfully, coverage reporting works_
 
 - [ ] **Task 1.1.3**: Implement IndexedDB database with Dexie
-  - Create NarratoDatabase class with complete schema from data-architecture.md
+  - Create ReadiwiDatabase class with complete schema from data-architecture.md
   - Implement database versioning and migration system
   - Create repository pattern for data access layer
   - Set up data validation and integrity constraints

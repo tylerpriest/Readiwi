@@ -1,4 +1,4 @@
-# Narrato v4.0 - Complete System Design
+# Readiwi v4.0 - Complete System Design
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  
@@ -7,7 +7,7 @@
 
 ## Architecture Overview
 
-Narrato v4.0 is designed as a modern, offline-first web application with a focus on autonomous development, innovation opportunities, and production-ready quality. The architecture emphasizes modularity, performance, and accessibility.
+Readiwi v4.0 is designed as a modern, offline-first web application with a focus on autonomous development, innovation opportunities, and production-ready quality. The architecture emphasizes modularity, performance, and accessibility.
 
 ### System Design Principles
 

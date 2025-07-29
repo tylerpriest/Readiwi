@@ -1,7 +1,7 @@
 {
   "version": "4.0.0",
   "lastUpdated": "2025-07-29",
-  "description": "Complete feature registry for Narrato v4.0 autonomous development",
+  "description": "Complete feature registry for Readiwi v4.0 autonomous development",
   "features": {
     "core": {
       "authentication": {

@@ -1,4 +1,4 @@
-# Narrato v4.0 - Complete Requirements Specification
+# Readiwi v4.0 - Complete Requirements Specification
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  
@@ -7,7 +7,7 @@
 
 ## Introduction
 
-This specification defines the complete requirements for Narrato, a modern web-based audiobook reader that transforms web novels into accessible, immersive reading and listening experiences. The system is designed for autonomous development by AI agents while maintaining human oversight and validation capabilities.
+This specification defines the complete requirements for Readiwi, a modern web-based audiobook reader that transforms web novels into accessible, immersive reading and listening experiences. The system is designed for autonomous development by AI agents while maintaining human oversight and validation capabilities.
 
 ## User Personas
 
@@ -464,4 +464,4 @@ This specification defines the complete requirements for Narrato, a modern web-b
 
 ---
 
-**Next Steps**: Upon approval of these requirements, proceed to the design document that outlines the technical architecture, component structure, and implementation approach for the complete Narrato application.
+**Next Steps**: Upon approval of these requirements, proceed to the design document that outlines the technical architecture, component structure, and implementation approach for the complete Readiwi application.

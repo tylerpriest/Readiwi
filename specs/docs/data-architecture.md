@@ -1,4 +1,4 @@
-# Narrato v4.0 - Complete Data Architecture Specification
+# Readiwi v4.0 - Complete Data Architecture Specification
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  
@@ -7,7 +7,7 @@
 
 ## Database Architecture Overview
 
-Narrato uses IndexedDB as the primary client-side database with Dexie as the wrapper library. The architecture is designed for offline-first functionality with optional cloud synchronization.
+Readiwi uses IndexedDB as the primary client-side database with Dexie as the wrapper library. The architecture is designed for offline-first functionality with optional cloud synchronization.
 
 ### Database Design Principles
 
@@ -24,7 +24,7 @@ Narrato uses IndexedDB as the primary client-side database with Dexie as the wra
 ```typescript
 // Database version and configuration
 export const DATABASE_VERSION = 4;
-export const DATABASE_NAME = 'NarratoDatabase';
+export const DATABASE_NAME = 'ReadiwiDatabase';
 
 // Storage quotas and limits
 export const STORAGE_LIMITS = {
@@ -42,7 +42,7 @@ export const STORAGE_LIMITS = {
 ```typescript
 import Dexie, { Table } from 'dexie';
 
-export class NarratoDatabase extends Dexie {
+export class ReadiwiDatabase extends Dexie {
   // Core content tables
   books!: Table<Book>;
   chapters!: Table<Chapter>;
@@ -92,7 +92,7 @@ export class NarratoDatabase extends Dexie {
   }
 }
 
-export const db = new NarratoDatabase();
+export const db = new ReadiwiDatabase();
 ```
 
 ## Data Models
@@ -318,7 +318,7 @@ export interface Repository<T> {
 
 // Book repository implementation
 export class BookRepository implements Repository<Book> {
-  constructor(private db: NarratoDatabase) {}
+  constructor(private db: ReadiwiDatabase) {}
   
   async create(book: Omit<Book, 'id'>): Promise<number> {
     const now = new Date();
@@ -395,7 +395,7 @@ export class BookRepository implements Repository<Book> {
 ```typescript
 export class QueryOptimizer {
   // Optimized queries for common operations
-  static async getBookWithLatestProgress(db: NarratoDatabase, bookId: number): Promise<BookWithProgress | null> {
+  static async getBookWithLatestProgress(db: ReadiwiDatabase, bookId: number): Promise<BookWithProgress | null> {
     const [book, latestProgress] = await Promise.all([
       db.books.get(bookId),
       db.readingProgress
@@ -414,7 +414,7 @@ export class QueryOptimizer {
     };
   }
   
-  static async getLibraryWithProgress(db: NarratoDatabase): Promise<BookWithProgress[]> {
+  static async getLibraryWithProgress(db: ReadiwiDatabase): Promise<BookWithProgress[]> {
     const books = await db.books.orderBy('updatedAt').reverse().toArray();
     
     // Batch fetch latest progress for all books

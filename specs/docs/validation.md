@@ -1,4 +1,4 @@
-# Narrato v4.0 - Complete Validation Criteria
+# Readiwi v4.0 - Complete Validation Criteria
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  

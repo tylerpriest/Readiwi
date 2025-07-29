@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Narrato v4.0** is a web-based audiobook reader for web novels designed for autonomous development by AI agents. This is a specifications-only repository containing comprehensive documentation for building a modern, accessible, and high-performance reading application.
+**Readiwi v4.0** is a web-based audiobook reader for web novels designed for autonomous development by AI agents. This is a specifications-only repository containing comprehensive documentation for building a modern, accessible, and high-performance reading application.
 
 ### Key Characteristics
 - **Specification-driven development**: Complete documentation before implementation
@@ -24,7 +24,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Database**: IndexedDB with Dexie 3.0+ for offline-first storage
 - **Testing**: Jest 29+ with React Testing Library, Playwright 1.40+ for E2E
 - **Audio**: Web Speech API (browser native) with fallback support
-- **UI Components**: Radix UI primitives with custom styling
+- **UI Components**: Tailwind CSS with ShadCN
 
 ### Core Plugin Architecture
 The application uses a mandatory plugin-based architecture where ALL features must implement the Plugin interface:

@@ -1,4 +1,4 @@
-# NARRATO AI MASTER SPECIFICATION v4.0
+# READIWI AI MASTER SPECIFICATION v4.0
 
 **Version**: 4.0.0  
 **Created**: 2025-07-29  
@@ -8,7 +8,7 @@
 ## SYSTEM_CONTEXT
 
 ### Project Identity
-- **Name**: Narrato
+- **Name**: Readiwi
 - **Type**: Web-based audiobook reader for web novels
 - **Architecture**: Next.js 14 single-page application with IndexedDB storage
 - **Target Users**: Web novel readers seeking accessible reading/listening experience

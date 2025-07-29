@@ -1,8 +1,8 @@
-# Narrato Specifications v4.0 - Production-Ready Autonomous Development
+# Readiwi Specifications v4.0 - Production-Ready Autonomous Development
 
 ## Overview
 
-Specs-v4 represents a complete, production-ready specification system designed for autonomous development by Claude Code CLI. This system addresses all critical gaps identified in the v3 audit and provides comprehensive coverage for rebuilding Narrato from scratch with modern, maintainable architecture.
+Specs-v4 represents a complete, production-ready specification system designed for autonomous development by Claude Code CLI. This system addresses all critical gaps identified in the v3 audit and provides comprehensive coverage for rebuilding Readiwi from scratch with modern, maintainable architecture.
 
 ## Key Improvements from v3
 
@@ -210,7 +210,7 @@ Specs-v4 represents a complete, production-ready specification system designed f
 
 ---
 
-**Narrato Specs v4.0** - Production-ready autonomous development specifications  
+**Readiwi Specs v4.0** - Production-ready autonomous development specifications  
 **Created**: 2025-07-29  
-**Purpose**: Enable complete autonomous rebuild of Narrato with modern, maintainable architecture  
+**Purpose**: Enable complete autonomous rebuild of Readiwi with modern, maintainable architecture  
 **Target**: Claude Code CLI and human development teams
