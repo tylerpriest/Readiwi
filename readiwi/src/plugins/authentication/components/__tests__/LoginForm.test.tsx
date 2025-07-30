@@ -44,7 +44,7 @@ describe('LoginForm', () => {
       
       expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+      expect(screen.getByTestId('login-password-input')).toBeInTheDocument();
       expect(screen.getByLabelText(/remember me/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
       expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
