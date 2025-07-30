@@ -284,7 +284,9 @@ describe('LoginForm', () => {
       
       render(<LoginForm />);
       
-      // When: User submits empty form
+      // When: User fills form with invalid data and submits
+      await user.type(screen.getByTestId('login-email-input'), 'invalid-email');
+      await user.type(screen.getByTestId('login-password-input'), 'password123');
       await user.click(screen.getByRole('button', { name: /sign in/i }));
       
       // Then: Accessibility attributes indicate error state
