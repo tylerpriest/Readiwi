@@ -101,9 +101,29 @@ interface StoreState {
 }
 ```
 
+## Testing Philosophy: BDD/ATDD First
+**EXAMPLES FIRST, IMPLEMENTATION SECOND** - Start with concrete user behavior examples, then implement to make them pass
+
+### Test-Driven Priority Order:
+1. **User Stories as Tests** - What value does this deliver? (BDD Scenarios)
+2. **Implementation** - Make the behavior examples pass
+3. **Edge Cases** - Handle realistic error scenarios
+4. **Coverage** - Ensure 85%+ with meaningful assertions
+
+### BDD Pattern (Use for all features):
+```typescript
+describe('User Story: [Feature Value]', () => {
+  test('User can [accomplish goal] and [get benefit]', async () => {
+    // Given: Initial state
+    // When: User action  
+    // Then: Expected outcome that delivers value
+  });
+});
+```
+
 ## Quality Gates (Run in order)
 1. **TypeScript**: `npm run type-check` (defer cosmetic issues with @ts-ignore)
-2. **Tests**: `npm test` (must achieve 85%+ coverage)
+2. **Tests**: `npm test` (must achieve 85%+ coverage with BDD user stories)
 3. **Build**: `npm run build` (must complete successfully)
 4. **Accessibility**: `npm run test:a11y` (WCAG 2.1 AA compliance)
 

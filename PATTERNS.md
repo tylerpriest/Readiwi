@@ -268,8 +268,51 @@ const useAsyncError = () => {
 };
 ```
 
-## Test Pattern (Follow exactly)
+## Test Pattern - BDD First (MANDATORY)
 
+### 1. BDD User Story Tests (Write FIRST)
+```typescript
+// ✅ PRIMARY: Start with user value - what goal does this accomplish?
+describe('User Story: Reader can save position while reading', () => {
+  test('User can close app and return to exact same position', async () => {
+    // Given: User is reading chapter 5 at 60% progress
+    await page.goto('/read/book-123/chapter-5');
+    await page.evaluate(() => window.scrollTo(0, 1200)); // 60% scroll
+    
+    // When: User closes and reopens app
+    await page.close();
+    await page.goto('/read/book-123/chapter-5');
+    
+    // Then: User returns to exact same position
+    await expect(page.locator('[data-reading-position="60%"]')).toBeVisible();
+    expect(await page.evaluate(() => window.scrollY)).toBe(1200);
+  });
+});
+```
+
+### 2. Integration Tests (Write SECOND)
+```typescript
+describe('Library Management Integration', () => {
+  test('User can add book and immediately start reading', async () => {
+    // Given: User has empty library
+    render(<App />);
+    
+    // When: User adds book via URL import
+    await userEvent.click(screen.getByTestId('add-book-button'));
+    await userEvent.type(screen.getByTestId('book-url-input'), 'https://example.com/book');
+    await userEvent.click(screen.getByTestId('import-button'));
+    
+    // Then: Book appears in library and is readable
+    await waitFor(() => {
+      expect(screen.getByTestId('book-card')).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByTestId('read-button'));
+    expect(screen.getByTestId('reader-interface')).toBeInTheDocument();
+  });
+});
+```
+
+### 3. Component Tests (Write LAST - Unit test pattern)
 ```typescript
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

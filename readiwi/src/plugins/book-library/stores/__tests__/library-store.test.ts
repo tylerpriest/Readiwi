@@ -2,7 +2,7 @@ import { useLibraryStore } from '../library-store';
 import { BookStatus } from '@/core/types/database';
 
 // Mock the library service
-jest.mock('../services/library-service', () => ({
+jest.mock('../../services/library-service', () => ({
   libraryService: {
     getAllBooksWithMetadata: jest.fn().mockResolvedValue([]),
     getLibraryStats: jest.fn().mockResolvedValue({
