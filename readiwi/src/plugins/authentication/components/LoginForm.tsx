@@ -110,11 +110,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
   
   // 5. Render with accessibility and performance optimization
   return (
-    <Card
+    <main
       className={cn('w-full max-w-md mx-auto', className)}
-      data-testid={testId}
+      data-testid={testId || 'login-form-container'}
+      role="main"
       {...props}
     >
+      <Card className="w-full">
       <CardHeader className="text-center">
         <h1 className="tracking-tight text-2xl font-bold">Welcome Back</h1>
         <CardDescription>
@@ -277,7 +279,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </div>
         </form>
       </CardContent>
-    </Card>
+      </Card>
+    </main>
   );
 };
 

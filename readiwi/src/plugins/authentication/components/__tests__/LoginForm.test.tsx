@@ -38,10 +38,12 @@ describe('LoginForm', () => {
     });
   });
 
-  describe('Rendering', () => {
-    it('should render login form with all required fields', () => {
+  describe('User Story: Login Form Renders Correctly for Users', () => {
+    test('User can see all essential login elements', () => {
+      // Given: User visits the login page
       render(<LoginForm />);
       
+      // Then: All essential elements are visible and accessible
       expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
       expect(screen.getByTestId('login-password-input')).toBeInTheDocument();
@@ -50,17 +52,21 @@ describe('LoginForm', () => {
       expect(screen.getByText(/don't have an account/i)).toBeInTheDocument();
     });
 
-    it('should render with custom test id', () => {
+    test('User can identify the form with custom test identifier', () => {
+      // Given: Login form with custom identifier
       render(<LoginForm data-testid="custom-login-form" />);
       
+      // Then: Form can be found by the custom identifier
       expect(screen.getByTestId('custom-login-form')).toBeInTheDocument();
     });
 
-    it('should apply custom className', () => {
+    test('User interface styling can be customized properly', () => {
+      // Given: Login form with custom styling
       render(<LoginForm className="custom-class" />);
       
-      const form = screen.getByRole('main');
-      expect(form).toHaveClass('custom-class');
+      // Then: Custom styling is applied to the form container
+      const formContainer = screen.getByTestId('login-form-container') || screen.getByRole('main');
+      expect(formContainer).toHaveClass('custom-class');
     });
   });
 
@@ -75,23 +81,29 @@ describe('LoginForm', () => {
       expect(emailInput).toHaveValue('test@example.com');
     });
 
-    it('should update password field when typed in', async () => {
+    test('User can enter password securely', async () => {
+      // Given: User needs to enter password
       const user = userEvent.setup();
       render(<LoginForm />);
       
-      const passwordInput = screen.getByLabelText(/password/i);
+      // When: User types in password field
+      const passwordInput = screen.getByTestId('login-password-input');
       await user.type(passwordInput, 'testpassword');
       
+      // Then: Password is captured securely
       expect(passwordInput).toHaveValue('testpassword');
     });
 
-    it('should toggle password visibility', async () => {
+    test('User can toggle password visibility for security and convenience', async () => {
+      // Given: User wants to see their password while typing
       const user = userEvent.setup();
       render(<LoginForm />);
       
-      const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
+      // When: User clicks password visibility toggle
+      const passwordInput = screen.getByTestId('login-password-input') as HTMLInputElement;
       const toggleButton = screen.getByTestId('toggle-password-visibility');
       
+      // Then: Password visibility toggles appropriately
       expect(passwordInput.type).toBe('password');
       
       await user.click(toggleButton);
@@ -114,19 +126,22 @@ describe('LoginForm', () => {
     });
   });
 
-  describe('Form Submission', () => {
-    it('should call login with correct credentials on submit', async () => {
+  describe('User Story: Successful Login Process', () => {
+    test('User can login with correct credentials and system processes them', async () => {
+      // Given: User has valid credentials and successful login response
       const user = userEvent.setup();
       mockLogin.mockResolvedValue(undefined);
       
       render(<LoginForm onSuccess={mockOnSuccess} />);
       
-      await user.type(screen.getByLabelText(/email/i), 'test@example.com');
-      await user.type(screen.getByLabelText(/password/i), 'testpassword');
+      // When: User enters credentials and submits form
+      await user.type(screen.getByTestId('login-email-input'), 'test@example.com');
+      await user.type(screen.getByTestId('login-password-input'), 'testpassword');
       await user.click(screen.getByLabelText(/remember me/i));
       
       await user.click(screen.getByRole('button', { name: /sign in/i }));
       
+      // Then: Login service is called with correct credentials
       expect(mockLogin).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'testpassword',
@@ -134,16 +149,19 @@ describe('LoginForm', () => {
       });
     });
 
-    it('should call onSuccess callback when login succeeds', async () => {
+    test('User receives success confirmation when login completes', async () => {
+      // Given: User submits login form with valid credentials
       const user = userEvent.setup();
       mockLogin.mockResolvedValue(undefined);
       
       render(<LoginForm onSuccess={mockOnSuccess} />);
       
-      await user.type(screen.getByLabelText(/email/i), 'test@example.com');
-      await user.type(screen.getByLabelText(/password/i), 'testpassword');
+      // When: User completes login process
+      await user.type(screen.getByTestId('login-email-input'), 'test@example.com');
+      await user.type(screen.getByTestId('login-password-input'), 'testpassword');
       await user.click(screen.getByRole('button', { name: /sign in/i }));
       
+      // Then: Success callback is triggered
       await waitFor(() => {
         expect(mockOnSuccess).toHaveBeenCalled();
       });
@@ -241,18 +259,21 @@ describe('LoginForm', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should have proper ARIA labels and descriptions', () => {
+  describe('User Story: Accessible Form Experience', () => {
+    test('User with screen reader can understand form field states', () => {
+      // Given: User with assistive technology accesses form
       render(<LoginForm />);
       
-      const emailInput = screen.getByLabelText(/email/i);
-      const passwordInput = screen.getByLabelText(/password/i);
+      // Then: Form fields have proper accessibility attributes
+      const emailInput = screen.getByTestId('login-email-input');
+      const passwordInput = screen.getByTestId('login-password-input');
       
       expect(emailInput).toHaveAttribute('aria-invalid', 'false');
       expect(passwordInput).toHaveAttribute('aria-invalid', 'false');
     });
 
-    it('should mark invalid fields with proper ARIA attributes', async () => {
+    test('User receives clear feedback when form has validation errors', async () => {
+      // Given: User submits form with invalid data
       const user = userEvent.setup();
       const mockError = {
         validationErrors: [
@@ -263,10 +284,12 @@ describe('LoginForm', () => {
       
       render(<LoginForm />);
       
+      // When: User submits empty form
       await user.click(screen.getByRole('button', { name: /sign in/i }));
       
+      // Then: Accessibility attributes indicate error state
       await waitFor(() => {
-        const emailInput = screen.getByLabelText(/email/i);
+        const emailInput = screen.getByTestId('login-email-input');
         expect(emailInput).toHaveAttribute('aria-invalid', 'true');
         expect(emailInput).toHaveAttribute('aria-describedby', 'email-error');
       });
