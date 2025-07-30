@@ -116,9 +116,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
       {...props}
     >
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">
-          Welcome Back
-        </CardTitle>
+        <h1 className="tracking-tight text-2xl font-bold">Welcome Back</h1>
         <CardDescription>
           Sign in to your Readiwi account to continue reading
         </CardDescription>

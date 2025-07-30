@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { BookStatus } from '@/core/types/database';
 import { LibraryState, LibraryViewSettings, BookWithMetadata, LibraryStats } from '../types/library-types';
 import { libraryService } from '../services/library-service';
@@ -40,9 +39,7 @@ const initialState = {
   hasPreviousPage: false,
 };
 
-export const useLibraryStore = create<LibraryState>()(
-  persist(
-    (set, get) => ({
+export const useLibraryStore = create<LibraryState>()((set, get) => ({
       ...initialState,
       
       loadBooks: async () => {
@@ -441,19 +438,11 @@ export const useLibraryStore = create<LibraryState>()(
       })(),
       
       // Selectors
-      get hasBooks(): boolean {
-        return get().books.length > 0;
-      },
-      
-      get hasSelection(): boolean {
-        return get().selectedBooks.size > 0;
-      },
-      
-      get selectedCount(): number {
-        return get().selectedBooks.size;
-      },
-      
-      get isFiltered(): boolean {
+      // Computed properties as functions
+      hasBooks: () => get().books.length > 0,
+      hasSelection: () => get().selectedBooks.size > 0,
+      selectedCount: () => get().selectedBooks.size,
+      isFiltered: () => {
         const { viewSettings } = get();
         const { filterBy, searchQuery } = viewSettings;
         
@@ -466,13 +455,4 @@ export const useLibraryStore = create<LibraryState>()(
           filterBy.tags.length > 0
         );
       },
-    }),
-    {
-      name: 'readiwi-library',
-      partialize: (state) => ({
-        viewSettings: state.viewSettings,
-        lastUpdated: state.lastUpdated,
-      }),
-    }
-  )
-);
+    }));

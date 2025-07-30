@@ -217,7 +217,8 @@ describe('BookCard', () => {
         />
       );
 
-      const checkIcon = screen.getByRole('generic').querySelector('svg');
+      const selectionIndicator = screen.getByTestId('selection-indicator');
+      const checkIcon = selectionIndicator.querySelector('svg');
       expect(checkIcon).toBeInTheDocument();
     });
 
@@ -231,7 +232,7 @@ describe('BookCard', () => {
         />
       );
 
-      const heartIcon = screen.getByRole('generic').querySelector('svg[data-testid="heart-icon"]');
+      const heartIcon = screen.getByTestId('heart-icon');
       expect(heartIcon).toBeInTheDocument();
     });
   });

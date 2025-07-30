@@ -239,7 +239,7 @@ const BookCard: React.FC<BookCardProps> = ({
         {...props}
       >
         {/* Selection Indicator */}
-        <div className="w-4 flex items-center justify-center">
+        <div className="w-4 flex items-center justify-center" data-testid="selection-indicator">
           {isSelected && <Check className="w-3 h-3 text-primary" aria-hidden="true" />}
         </div>
         
@@ -249,7 +249,11 @@ const BookCard: React.FC<BookCardProps> = ({
             <span className="font-medium text-sm truncate">{book.title}</span>
             <span className="text-xs text-muted-foreground">by {book.author}</span>
             {book.isFavorite && (
-              <Heart className="w-3 h-3 text-red-500 fill-current flex-shrink-0" aria-hidden="true" />
+              <Heart 
+                className="w-3 h-3 text-red-500 fill-current flex-shrink-0" 
+                aria-hidden="true" 
+                data-testid="heart-icon" 
+              />
             )}
           </div>
         </div>
