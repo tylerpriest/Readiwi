@@ -1,4 +1,3 @@
-- [ ] Layout this TODO.md in a way that works best for you (and keeps it easy / makes it easier for me to use)
 - [ ] Remember to check TODO.md periodically record this in Claude.md or somewhere to make sure it happens, and that when you tick it off it gets moved below the ones still todo     
 - [ ] Can you integrate with Vercel so you can send builds to them and get the results
 
@@ -6,8 +5,11 @@
 - [ ] Design local-first architecture with future Supabase sync
 - [ ] Plan Book Import implementation using existing IndexedDB
 
-- [ ] Create a Team member that realistic checking 
 - [ ] Import books is next feature to work on check .human/WebNovel Parsers.md for link to githubs for apps that do this and directly to their plugins, webtoepub is very well done so focus on that.
+
+- [ ] Clean up type script and eslint errors
+
+
 - [x] Commit
 - [x] Add a rule to periodically check .human/TODO.md for notes from me and if its a question, answer it in the TODO.md but make it clear that it is an answer
 - [x] Import books is its own "plugin" yes?
