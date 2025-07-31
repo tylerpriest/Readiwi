@@ -6,6 +6,7 @@
 - [ ] Design local-first architecture with future Supabase sync
 - [ ] Plan Book Import implementation using existing IndexedDB
 
+- [ ] Create a Team member that realistic checking 
 - [ ] Import books is next feature to work on check .human/WebNovel Parsers.md for link to githubs for apps that do this and directly to their plugins, webtoepub is very well done so focus on that.
 - [x] Commit
 - [x] Add a rule to periodically check .human/TODO.md for notes from me and if its a question, answer it in the TODO.md but make it clear that it is an answer
