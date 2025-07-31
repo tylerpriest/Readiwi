@@ -1,7 +1,4 @@
-https://github.com/dteviot/WebToEpub/](https://github.com/dteviot/WebToEpub/
-https://github.com/dteviot/WebToEpub/blob/ExperimentalTabMode/plugin/js/parsers/RoyalRoadParser.js
+Draft Ideas
+1. Epub Import Feature
+2. Books broken into chunks for future AI readability Feature
 
-https://github.com/LNReader/lnreader-plugins/
-https://github.com/LNReader/lnreader-plugins/blob/master/src/plugins/english/royalroad.ts
-
-https://github.com/Flameish/Novel-Grabber

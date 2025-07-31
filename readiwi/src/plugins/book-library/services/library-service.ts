@@ -193,7 +193,7 @@ class LibraryService {
         
         currentProgress = latestProgress[0] ? {
           chapterId: latestProgress[0].chapterId,
-          position: latestProgress[0].position,
+          position: latestProgress[0].scrollPosition, // Use scrollPosition as the main position
           percentage: latestProgress[0].percentage,
           timestamp: new Date(latestProgress[0].timestamp),
         } : undefined;
@@ -206,23 +206,30 @@ class LibraryService {
       // Estimate reading time (assuming 250 words per minute average reading speed)
       const estimatedReadingTime = this.calculateEstimatedReadingTime(book.wordCount || 0);
       
-      return {
+      const result: BookWithMetadata = {
         ...book,
-        currentProgress,
         chaptersRead,
         estimatedReadingTime,
         addedToLibrary: book.createdAt,
       };
+      
+      if (currentProgress) {
+        result.currentProgress = currentProgress;
+      }
+      
+      return result;
     } catch (error) {
       console.error(`Failed to enrich book metadata for book ${book.id}:`, error);
       
       // Return book with minimal metadata if enrichment fails
-      return {
+      const fallbackResult: BookWithMetadata = {
         ...book,
         chaptersRead: 0,
         estimatedReadingTime: 0,
         addedToLibrary: book.createdAt,
       };
+      
+      return fallbackResult;
     }
   }
   

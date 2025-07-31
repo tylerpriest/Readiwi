@@ -82,12 +82,15 @@ export interface LibraryState {
   updateBookStatus: (id: number, status: BookStatus) => Promise<void>;
   
   // Utility
+  applyFiltersAndPagination: () => void;
+  debounceApplyFilters: () => void;
+  updateStats: () => void;
   clearError: () => void;
   reset: () => void;
   
   // Selectors
-  get hasBooks(): boolean;
-  get hasSelection(): boolean;
-  get selectedCount(): number;
-  get isFiltered(): boolean;
+  hasBooks: () => boolean;
+  hasSelection: () => boolean;
+  selectedCount: () => number;
+  isFiltered: () => boolean;
 }

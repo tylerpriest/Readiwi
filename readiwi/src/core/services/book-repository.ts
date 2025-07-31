@@ -1,6 +1,7 @@
 import { Book, BookStatus, BookWithProgress } from '@/core/types/database';
 import { BaseRepository } from './base-repository';
 import { db } from './database-simple';
+import { LibraryStats } from '@/plugins/book-library/types/library-types';
 
 export class BookRepository extends BaseRepository<Book> {
   constructor() {
@@ -129,13 +130,7 @@ export class BookRepository extends BaseRepository<Book> {
     }
   }
 
-  async getLibraryStats(): Promise<{
-    totalBooks: number;
-    favoriteBooks: number;
-    completedBooks: number;
-    inProgressBooks: number;
-    totalChapters: number;
-  }> {
+  async getLibraryStats(): Promise<LibraryStats> {
     try {
       const [books, allProgress] = await Promise.all([
         this.findAll(),

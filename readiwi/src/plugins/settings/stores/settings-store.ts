@@ -8,15 +8,7 @@ import { persist } from 'zustand/middleware';
 import {
   AppSettings,
   SettingsState,
-  ReadingSettings,
-  AudioSettings,
-  ImportSettings,
-  PrivacySettings,
-  AccessibilitySettings,
-  KeyboardShortcuts,
   SettingsExport,
-  SettingsValidationResult,
-  ThemeMode,
   DEFAULT_APP_SETTINGS,
 } from '../types/settings-types';
 import { settingsService } from '../services/settings-service';

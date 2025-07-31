@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { ReaderState, DEFAULT_READER_SETTINGS, ReadingPosition } from '../types/reader-types';
+import { ReaderState, DEFAULT_READER_SETTINGS } from '../types/reader-types';
 import { readerService } from '../services/reader-service';
 import { libraryService } from '@/plugins/book-library/services/library-service';
 
@@ -107,7 +107,7 @@ export const useReaderStore = create<ReaderState>()(
       },
       
       navigateToChapter: async (chapterNumber) => {
-        const { currentBook, chapters } = get();
+        const { currentBook } = get();
         if (!currentBook) return;
         
         try {

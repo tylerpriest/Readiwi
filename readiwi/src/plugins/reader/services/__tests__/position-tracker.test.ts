@@ -3,7 +3,7 @@
  * Testing that position tracking just works 99% of the time
  */
 
-import { ReliablePositionTracker, reliablePositionTracker } from '../position-tracker';
+import { ReliablePositionTracker } from '../position-tracker';
 
 describe('User Story: Never Lose Reading Position', () => {
   let tracker: ReliablePositionTracker;

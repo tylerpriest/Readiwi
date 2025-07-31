@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { BookStatus } from '@/core/types/database';
-import { LibraryState, LibraryViewSettings, BookWithMetadata, LibraryStats } from '../types/library-types';
+import { LibraryState, LibraryViewSettings, LibraryStats } from '../types/library-types';
 import { libraryService } from '../services/library-service';
 
 const defaultViewSettings: LibraryViewSettings = {

@@ -8,7 +8,6 @@
 import React, { useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/core/utils/cn';
 import { useSettingsStore } from '../stores/settings-store';
 

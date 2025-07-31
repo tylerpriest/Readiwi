@@ -7,7 +7,6 @@
  * Target: 99% reliability with no user frustration
  */
 
-import { ReadingPosition } from '../types/reader-types';
 
 interface TextFingerprint {
   before: string;      // Text before position
@@ -30,14 +29,14 @@ interface PositionCandidate {
   metadata?: any;
 }
 
-interface PositionValidationResult {
-  originalOffset: number;
-  restoredOffset: number;
-  accuracy: number;
-  strategy: string;
-  timeTaken: number;
-  confidence: number;
-}
+// interface PositionValidationResult {
+//   originalOffset: number;
+//   restoredOffset: number;
+//   accuracy: number;
+//   strategy: string;
+//   timeTaken: number;
+//   confidence: number;
+// }
 
 export class ReliablePositionTracker {
   private readonly FINGERPRINT_LENGTH = 30; // Shorter, simpler
@@ -127,7 +126,7 @@ export class ReliablePositionTracker {
     }
     
     candidates.sort((a, b) => b.confidence - a.confidence);
-    return candidates[0];
+    return candidates[0] || null;
   }
 
   /**
@@ -197,12 +196,16 @@ export class ReliablePositionTracker {
     
     let offset = paragraphIndex;
     for (let i = 0; i < fingerprint.wordIndex; i++) {
-      const wordStart = content.indexOf(words[i], offset);
+      const word = words[i];
+      if (!word) return null;
+      const wordStart = content.indexOf(word, offset);
       if (wordStart === -1) return null;
-      offset = wordStart + words[i].length;
+      offset = wordStart + word.length;
       
       // Skip whitespace
-      while (offset < content.length && /\s/.test(content[offset])) {
+      while (offset < content.length) {
+        const char = content[offset];
+        if (!char || !/\s/.test(char)) break;
         offset++;
       }
     }
@@ -218,7 +221,7 @@ export class ReliablePositionTracker {
     content: string, 
     offset: number, 
     originalFingerprint: TextFingerprint,
-    strategy: PositionStrategy
+    _strategy: PositionStrategy
   ): number {
     try {
       const newFingerprint = this.createFingerprint(content, offset);
@@ -229,12 +232,15 @@ export class ReliablePositionTracker {
       const paragraphSimilarity = this.textSimilarity(originalFingerprint.paragraph, newFingerprint.paragraph);
       
       // Weight different factors
-      return (
+      const confidence = (
         beforeSimilarity * 0.3 +
         afterSimilarity * 0.3 +
         paragraphSimilarity * 0.4
       );
-    } catch (error) {
+      
+      // Return confidence only if it meets minimum threshold
+      return confidence >= this.MIN_CONFIDENCE ? confidence : 0;
+    } catch (_error) {
       return 0;
     }
   }
@@ -302,7 +308,9 @@ export class ReliablePositionTracker {
       let position = i * step;
       
       // Adjust to word boundaries for more realistic testing
-      while (position < content.length && !/\s/.test(content[position])) {
+      while (position < content.length) {
+        const char = content[position];
+        if (!char || /\s/.test(char)) break;
         position++;
       }
       
@@ -325,17 +333,7 @@ export class ReliablePositionTracker {
     return index !== -1 ? index : null;
   }
 
-  private findAllIndices(text: string, searchString: string): number[] {
-    const indices: number[] = [];
-    let index = text.indexOf(searchString);
-    
-    while (index !== -1) {
-      indices.push(index);
-      index = text.indexOf(searchString, index + 1);
-    }
-    
-    return indices;
-  }
+  // TODO: Add findAllIndices for advanced position tracking if needed
 
   private levenshteinDistance(str1: string, str2: string): number {
     const matrix: number[][] = [];
@@ -345,7 +343,9 @@ export class ReliablePositionTracker {
     }
     
     for (let j = 0; j <= str1.length; j++) {
-      matrix[0][j] = j;
+      if (matrix[0]) {
+        matrix[0][j] = j;
+      }
     }
     
     for (let i = 1; i <= str2.length; i++) {

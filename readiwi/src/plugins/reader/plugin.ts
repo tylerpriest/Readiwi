@@ -56,10 +56,12 @@ export class ReaderPlugin implements Plugin {
   registerRoutes(): RouteRegistry {
     return {
       '/read/[bookId]': {
-        component: 'reader.ReaderView',
-        title: 'Reading - Readiwi',
-        description: 'Reading interface for books',
-        requiresAuth: false,
+        component: ReaderView,
+        metadata: {
+          title: 'Reading - Readiwi',
+          description: 'Reading interface for books',
+          requiresAuth: false,
+        },
       },
     };
   }

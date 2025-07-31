@@ -5,27 +5,32 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/core/utils/cn';
 import { useReaderStore } from '../stores/reader-store';
-import { reliablePositionTracker } from '../services/position-tracker';
+// import { reliablePositionTracker } from '../services/position-tracker'; // TODO: Use for position tracking
 import { 
   ChevronLeft, 
   ChevronRight, 
   Settings, 
   BookOpen, 
-  Loader2,
-  Clock
+  Loader2
+  // Clock // TODO: Use for reading time display
 } from 'lucide-react';
 import AudioControls from '@/plugins/audio/components/AudioControls';
 
 interface ReaderViewProps {
+  bookId: number; // @description ID of the book to read
   className?: string; // @description Additional CSS classes
   'data-testid'?: string; // @description Test identifier for testing
 }
 
 const ReaderView: React.FC<ReaderViewProps> = ({
+  bookId, // TODO: Use to load specific book
   className,
   'data-testid': testId,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  
+  // TODO: Use bookId to load specific book data
+  console.log('Reader loading for book:', bookId);
   
   // Store subscriptions
   const {
@@ -225,7 +230,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={previousChapter}
-              disabled={!currentBook || currentBook.chapters?.length === 0}
+              disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -250,7 +255,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={nextChapter}
-              disabled={!currentBook || currentBook.chapters?.length === 0}
+              disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
               aria-label="Next chapter"
               data-testid="next-chapter-button"
@@ -315,7 +320,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
             <Button
               variant="outline"
               onClick={previousChapter}
-              disabled={!currentBook || currentBook.chapters?.length === 0}
+              disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -331,7 +336,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
             <Button
               variant="outline"
               onClick={nextChapter}
-              disabled={!currentBook || currentBook.chapters?.length === 0}
+              disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
               aria-label="Next chapter bottom"
             >
