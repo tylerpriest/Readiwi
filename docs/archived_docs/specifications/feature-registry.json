@@ -1,0 +1,698 @@
+{
+  "version": "4.0.0",
+  "lastUpdated": "2025-07-29",
+  "description": "Complete feature registry for Readiwi v4.0 autonomous development",
+  "features": {
+    "core": {
+      "authentication": {
+        "id": "authentication",
+        "name": "Authentication System",
+        "description": "Complete user authentication with registration, login, logout, password reset, and secure session management",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": true,
+        "dependencies": [],
+        "category": "core",
+        "complexity": "medium",
+        "estimatedHours": 20,
+        "status": "required",
+        "priority": 1,
+        "acceptanceCriteria": [
+          "User can register with email and password validation",
+          "User can login with secure session persistence",
+          "User can logout with complete session cleanup",
+          "Password reset works with secure email verification",
+          "All forms are WCAG 2.1 AA compliant"
+        ],
+        "testRequirements": [
+          "Unit tests for authentication store and validation",
+          "Integration tests for authentication flows",
+          "Security tests for session management",
+          "E2E tests for complete authentication workflows",
+          "Accessibility tests for authentication forms"
+        ]
+      },
+      "settings-system": {
+        "id": "settings-system",
+        "name": "Settings System",
+        "description": "Core settings infrastructure with persistence, validation, import/export, and real-time updates",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": true,
+        "dependencies": [],
+        "category": "core",
+        "complexity": "low",
+        "estimatedHours": 12,
+        "status": "required",
+        "priority": 2,
+        "acceptanceCriteria": [
+          "Settings persist across browser sessions",
+          "Settings can be reset to defaults with confirmation",
+          "Settings can be exported/imported as JSON",
+          "Settings validation prevents invalid values",
+          "Settings interface is fully accessible"
+        ],
+        "testRequirements": [
+          "Unit tests for settings store and validation",
+          "Integration tests for settings persistence",
+          "Accessibility tests for settings interface",
+          "E2E tests for settings workflows",
+          "Performance tests for settings loading"
+        ]
+      },
+      "book-library": {
+        "id": "book-library",
+        "name": "Book Library Management",
+        "description": "Complete book library with grid/list views, search, filtering, sorting, and book management operations",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": true,
+        "dependencies": ["settings-system"],
+        "category": "core",
+        "complexity": "high",
+        "estimatedHours": 28,
+        "status": "required",
+        "priority": 3,
+        "acceptanceCriteria": [
+          "Books display in grid, list, and compact views",
+          "Search works by title, author, and tags with real-time results",
+          "Filtering by status, favorites, and date range",
+          "Sorting by title, author, date added, and last read",
+          "Book management operations work offline"
+        ],
+        "testRequirements": [
+          "Unit tests for library store and search logic",
+          "Integration tests for library UI interactions",
+          "Performance tests with 1000+ books",
+          "Accessibility tests for library interface",
+          "E2E tests for complete library workflows"
+        ]
+      },
+      "basic-reader": {
+        "id": "basic-reader",
+        "name": "Basic Reader Interface",
+        "description": "Core reading interface with chapter navigation, responsive design, and accessibility features",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": true,
+        "dependencies": ["book-library"],
+        "category": "core",
+        "complexity": "high",
+        "estimatedHours": 32,
+        "status": "required",
+        "priority": 4,
+        "acceptanceCriteria": [
+          "Chapter content displays with proper formatting",
+          "Navigation works with buttons and keyboard shortcuts",
+          "Reader interface is fully responsive and mobile-optimized",
+          "60fps scrolling performance on mobile devices",
+          "Complete accessibility with screen reader support"
+        ],
+        "testRequirements": [
+          "Unit tests for reader store and navigation",
+          "Integration tests for reader UI and chapter loading",
+          "Performance tests for scrolling and rendering",
+          "Accessibility tests for reading interface",
+          "E2E tests for complete reading workflows"
+        ]
+      }
+    },
+    "enhancements": {
+      "parser-management": {
+        "id": "parser-management",
+        "name": "Parser Management System",
+        "description": "Extensible parser system with support for Royal Road, ReadNovelFull, FreeWebNovel, FanMTL, and generic parsing",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["settings-system"],
+        "category": "enhancement",
+        "complexity": "high",
+        "estimatedHours": 24,
+        "status": "active",
+        "priority": 5,
+        "acceptanceCriteria": [
+          "Parsers for all major web novel sites work correctly",
+          "Parser system is extensible for new sites",
+          "Parser management UI allows enable/disable",
+          "Generic parser provides fallback for unsupported sites",
+          "Parser errors are handled gracefully with user feedback"
+        ],
+        "testRequirements": [
+          "Unit tests for parser implementations",
+          "Integration tests for parser management",
+          "Mock tests for external site parsing",
+          "Error handling tests for network failures",
+          "E2E tests for parser workflows"
+        ]
+      },
+      "book-import": {
+        "id": "book-import",
+        "name": "Book Import System",
+        "description": "Comprehensive book import with progress tracking, queue management, error handling, and retry functionality",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["book-library", "parser-management"],
+        "category": "enhancement",
+        "complexity": "high",
+        "estimatedHours": 20,
+        "status": "active",
+        "priority": 6,
+        "acceptanceCriteria": [
+          "Books can be imported from supported URLs",
+          "Import progress shows with visual feedback",
+          "Failed imports can be retried with clear error messages",
+          "Multiple imports can be queued and processed",
+          "Import interface is accessible with progress announcements"
+        ],
+        "testRequirements": [
+          "Unit tests for import store and job management",
+          "Integration tests with parser system",
+          "Mock tests for import workflows",
+          "Error handling tests for various failure scenarios",
+          "E2E tests for complete import processes"
+        ]
+      },
+      "position-tracking": {
+        "id": "position-tracking",
+        "name": "Position Tracking - Innovation Challenge",
+        "description": "Revolutionary position tracking system achieving 95%+ accuracy with zero position loss - complete reimagination of current approach",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["basic-reader", "settings-system"],
+        "category": "enhancement",
+        "complexity": "high",
+        "estimatedHours": 18,
+        "status": "active",
+        "priority": 7,
+        "acceptanceCriteria": [
+          "Position restoration achieves 95%+ accuracy across all content types",
+          "Zero position loss occurs during any usage scenario including inactivity",
+          "Position tracking has minimal performance impact (<1% CPU, <5MB memory)",
+          "System works reliably offline and syncs when online",
+          "Users never notice position tracking working but always return to exact position"
+        ],
+        "testRequirements": [
+          "Innovation validation tests proving superiority over current implementation",
+          "Accuracy tests achieving 95%+ across all content types and scenarios",
+          "Performance tests validating minimal impact on reading experience",
+          "Reliability tests ensuring zero position loss in all usage patterns",
+          "Comprehensive testing proving revolutionary improvement"
+        ]
+      },
+      "reading-customization": {
+        "id": "reading-customization",
+        "name": "Reading Customization System",
+        "description": "Comprehensive reading customization with fonts, themes, layout, spacing, and real-time preview",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["basic-reader", "settings-system"],
+        "category": "enhancement",
+        "complexity": "medium",
+        "estimatedHours": 16,
+        "status": "active",
+        "priority": 8,
+        "acceptanceCriteria": [
+          "Font family, size, and spacing can be customized",
+          "Multiple themes (light, dark, sepia, high-contrast) available",
+          "Layout and alignment options work correctly",
+          "Customizations apply instantly with real-time preview",
+          "Customization interface is fully accessible"
+        ],
+        "testRequirements": [
+          "Unit tests for customization store and validation",
+          "Integration tests with reader interface",
+          "Visual regression tests for theme changes",
+          "Accessibility tests for customization options",
+          "E2E tests for customization workflows"
+        ]
+      },
+      "search-discovery": {
+        "id": "search-discovery",
+        "name": "Advanced Search and Discovery",
+        "description": "Powerful search with fuzzy matching, boolean operators, saved searches, and advanced filtering",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["book-library"],
+        "category": "enhancement",
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "status": "active",
+        "priority": 9,
+        "acceptanceCriteria": [
+          "Search handles typos with fuzzy matching",
+          "Advanced search with boolean operators works",
+          "Search history and saved searches available",
+          "Search performance remains fast with large libraries",
+          "Search results are ranked by relevance"
+        ],
+        "testRequirements": [
+          "Unit tests for search algorithms and ranking",
+          "Integration tests for search UI",
+          "Performance tests with large datasets",
+          "Accessibility tests for search interface",
+          "E2E tests for search workflows"
+        ]
+      }
+    },
+    "audio": {
+      "text-to-speech": {
+        "id": "text-to-speech",
+        "name": "Text-to-Speech System",
+        "description": "Comprehensive TTS with Web Speech API, voice selection, audio controls, and position synchronization",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["basic-reader", "settings-system"],
+        "category": "audio",
+        "complexity": "high",
+        "estimatedHours": 22,
+        "status": "active",
+        "priority": 10,
+        "acceptanceCriteria": [
+          "TTS works with Web Speech API",
+          "Voice selection from available system voices",
+          "Audio controls (play, pause, stop, rate, pitch, volume)",
+          "Audio position synchronizes with text position",
+          "Audio interface is fully accessible"
+        ],
+        "testRequirements": [
+          "Unit tests for TTS store and functionality",
+          "Integration tests with reader and position tracking",
+          "Mock tests for Web Speech API",
+          "Accessibility tests for audio controls",
+          "E2E tests for complete audio workflows"
+        ]
+      },
+      "audio-controls": {
+        "id": "audio-controls",
+        "name": "Advanced Audio Controls",
+        "description": "Advanced audio controls with global audio bar, chapter navigation, and background playback",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["text-to-speech"],
+        "category": "audio",
+        "complexity": "medium",
+        "estimatedHours": 12,
+        "status": "active",
+        "priority": 11,
+        "acceptanceCriteria": [
+          "Global audio bar with playback controls",
+          "Audio continues playing during navigation",
+          "Chapter boundaries handled automatically",
+          "Audio settings persist across sessions",
+          "Audio controls work with keyboard shortcuts"
+        ],
+        "testRequirements": [
+          "Unit tests for audio control logic",
+          "Integration tests for global audio bar",
+          "Accessibility tests for audio controls",
+          "E2E tests for background audio playback",
+          "Performance tests for audio processing"
+        ]
+      },
+      "audio-sync": {
+        "id": "audio-sync",
+        "name": "Audio Position Synchronization",
+        "description": "Advanced audio-text synchronization with highlighting, position mapping, and accuracy tracking",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["text-to-speech", "position-tracking"],
+        "category": "audio",
+        "complexity": "high",
+        "estimatedHours": 16,
+        "status": "active",
+        "priority": 12,
+        "acceptanceCriteria": [
+          "Audio position maps accurately to text position",
+          "Currently spoken text is highlighted",
+          "Sync accuracy is measured and maintained",
+          "Sync works across different content types",
+          "Sync can be enabled/disabled by user"
+        ],
+        "testRequirements": [
+          "Unit tests for sync algorithms",
+          "Integration tests with TTS and position tracking",
+          "Accuracy tests for sync precision",
+          "Performance tests for sync processing",
+          "E2E tests for sync workflows"
+        ]
+      },
+      "voice-selection": {
+        "id": "voice-selection",
+        "name": "Voice Selection and Management",
+        "description": "Comprehensive voice selection with preview, favorites, and voice quality indicators",
+        "version": "1.0.0",
+        "enabled": true,
+        "required": false,
+        "dependencies": ["text-to-speech"],
+        "category": "audio",
+        "complexity": "low",
+        "estimatedHours": 8,
+        "status": "active",
+        "priority": 13,
+        "acceptanceCriteria": [
+          "All available system voices are listed",
+          "Voice preview functionality works correctly",
+          "Voice favorites can be saved and managed",
+          "Voice selection persists across sessions",
+          "Voice interface is accessible"
+        ],
+        "testRequirements": [
+          "Unit tests for voice management",
+          "Integration tests for voice selection UI",
+          "Mock tests for voice enumeration",
+          "Accessibility tests for voice interface",
+          "E2E tests for voice selection workflows"
+        ]
+      }
+    },
+    "advanced": {
+      "bookmarks-annotations": {
+        "id": "bookmarks-annotations",
+        "name": "Bookmarks and Annotations",
+        "description": "Comprehensive bookmark system with categories, tags, notes, and cross-chapter navigation",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["basic-reader", "position-tracking"],
+        "category": "advanced",
+        "complexity": "medium",
+        "estimatedHours": 18,
+        "status": "planned",
+        "priority": 14,
+        "acceptanceCriteria": [
+          "Bookmarks can be added at any reading position",
+          "Bookmark categories and tags for organization",
+          "Bookmark notes and annotations supported",
+          "Bookmark navigation and search functionality",
+          "Bookmark export and sharing capabilities"
+        ],
+        "testRequirements": [
+          "Unit tests for bookmark management",
+          "Integration tests with reader interface",
+          "Accessibility tests for bookmark UI",
+          "E2E tests for bookmark workflows",
+          "Performance tests for large bookmark collections"
+        ]
+      },
+      "reading-analytics": {
+        "id": "reading-analytics",
+        "name": "Reading Analytics and Statistics",
+        "description": "Privacy-focused reading analytics with session tracking, reading speed, and progress statistics",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["position-tracking"],
+        "category": "advanced",
+        "complexity": "medium",
+        "estimatedHours": 14,
+        "status": "planned",
+        "priority": 15,
+        "acceptanceCriteria": [
+          "Reading session tracking with time and progress",
+          "Reading speed calculation and trends",
+          "Book completion statistics and goals",
+          "Privacy-focused with local data storage",
+          "Analytics dashboard with visualizations"
+        ],
+        "testRequirements": [
+          "Unit tests for analytics calculations",
+          "Integration tests for data collection",
+          "Privacy tests for data handling",
+          "Accessibility tests for analytics UI",
+          "E2E tests for analytics workflows"
+        ]
+      },
+      "offline-sync": {
+        "id": "offline-sync",
+        "name": "Offline Reading and Cloud Sync",
+        "description": "Advanced offline capabilities with cloud synchronization, conflict resolution, and cross-device sync",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["authentication", "book-library", "position-tracking"],
+        "category": "advanced",
+        "complexity": "extra-high",
+        "estimatedHours": 40,
+        "status": "future",
+        "priority": 16,
+        "acceptanceCriteria": [
+          "Complete offline functionality for all features",
+          "Cloud sync for books, progress, and settings",
+          "Conflict resolution for sync conflicts",
+          "Cross-device synchronization",
+          "Sync status and error handling"
+        ],
+        "testRequirements": [
+          "Unit tests for sync algorithms",
+          "Integration tests for offline functionality",
+          "Conflict resolution tests",
+          "Cross-device sync tests",
+          "E2E tests for complete sync workflows"
+        ]
+      },
+      "social-features": {
+        "id": "social-features",
+        "name": "Social Features and Sharing",
+        "description": "Social features including reading lists, book recommendations, reviews, and progress sharing",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["authentication", "book-library"],
+        "category": "advanced",
+        "complexity": "high",
+        "estimatedHours": 32,
+        "status": "future",
+        "priority": 17,
+        "acceptanceCriteria": [
+          "Reading lists creation and sharing",
+          "Book recommendations based on reading history",
+          "Book reviews and ratings system",
+          "Progress sharing with privacy controls",
+          "Social features are fully accessible"
+        ],
+        "testRequirements": [
+          "Unit tests for social features logic",
+          "Integration tests for sharing functionality",
+          "Privacy tests for social data",
+          "Accessibility tests for social UI",
+          "E2E tests for social workflows"
+        ]
+      }
+    },
+    "platform": {
+      "mobile-app": {
+        "id": "mobile-app",
+        "name": "Native Mobile Application",
+        "description": "React Native mobile application with native performance and platform-specific optimizations",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["authentication", "book-library", "basic-reader"],
+        "category": "platform",
+        "complexity": "extra-high",
+        "estimatedHours": 80,
+        "status": "future",
+        "priority": 18,
+        "acceptanceCriteria": [
+          "Native iOS and Android applications",
+          "Shared business logic with web application",
+          "Platform-specific UI optimizations",
+          "Native performance and battery optimization",
+          "App store compliance and distribution"
+        ],
+        "testRequirements": [
+          "Unit tests for shared business logic",
+          "Integration tests for platform-specific code",
+          "Performance tests for mobile devices",
+          "Accessibility tests for mobile platforms",
+          "E2E tests for mobile workflows"
+        ]
+      },
+      "api-platform": {
+        "id": "api-platform",
+        "name": "Public API Platform",
+        "description": "RESTful API platform for third-party integrations, developer tools, and ecosystem expansion",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["authentication"],
+        "category": "platform",
+        "complexity": "high",
+        "estimatedHours": 36,
+        "status": "future",
+        "priority": 19,
+        "acceptanceCriteria": [
+          "RESTful API with comprehensive documentation",
+          "API authentication and rate limiting",
+          "Developer tools and SDK",
+          "API versioning and backward compatibility",
+          "Third-party integration examples"
+        ],
+        "testRequirements": [
+          "Unit tests for API endpoints",
+          "Integration tests for API workflows",
+          "Security tests for API authentication",
+          "Performance tests for API scalability",
+          "E2E tests for API usage scenarios"
+        ]
+      },
+      "browser-extension": {
+        "id": "browser-extension",
+        "name": "Browser Extension",
+        "description": "Browser extension for one-click book import and reading integration with web novel sites",
+        "version": "1.0.0",
+        "enabled": false,
+        "required": false,
+        "dependencies": ["book-import", "parser-management"],
+        "category": "platform",
+        "complexity": "medium",
+        "estimatedHours": 20,
+        "status": "future",
+        "priority": 20,
+        "acceptanceCriteria": [
+          "One-click book import from supported sites",
+          "Reading progress sync with main application",
+          "Extension works on major browsers",
+          "Privacy-focused with minimal permissions",
+          "Extension store compliance and distribution"
+        ],
+        "testRequirements": [
+          "Unit tests for extension logic",
+          "Integration tests with main application",
+          "Cross-browser compatibility tests",
+          "Security tests for extension permissions",
+          "E2E tests for extension workflows"
+        ]
+      }
+    }
+  },
+  "categories": {
+    "core": {
+      "name": "Core Features",
+      "description": "Essential features required for basic functionality - cannot be disabled",
+      "color": "#dc2626",
+      "icon": "shield-check",
+      "priority": 1
+    },
+    "enhancement": {
+      "name": "Core Enhancements",
+      "description": "Important features that significantly enhance the user experience",
+      "color": "#ea580c",
+      "icon": "star",
+      "priority": 2
+    },
+    "audio": {
+      "name": "Audio Features",
+      "description": "Text-to-speech and audio-related functionality for listening experience",
+      "color": "#d97706",
+      "icon": "volume-2",
+      "priority": 3
+    },
+    "advanced": {
+      "name": "Advanced Features",
+      "description": "Sophisticated features for power users and enhanced functionality",
+      "color": "#059669",
+      "icon": "zap",
+      "priority": 4
+    },
+    "platform": {
+      "name": "Platform Extensions",
+      "description": "Platform-specific applications and integrations",
+      "color": "#0284c7",
+      "icon": "smartphone",
+      "priority": 5
+    }
+  },
+  "complexity": {
+    "low": {
+      "name": "Low",
+      "description": "Simple features with minimal dependencies and straightforward implementation",
+      "estimatedHours": "4-12",
+      "color": "#10b981",
+      "multiplier": 1.0
+    },
+    "medium": {
+      "name": "Medium",
+      "description": "Moderate complexity with some dependencies and integration requirements",
+      "estimatedHours": "12-24",
+      "color": "#f59e0b",
+      "multiplier": 1.5
+    },
+    "high": {
+      "name": "High",
+      "description": "Complex features with multiple dependencies and significant integration",
+      "estimatedHours": "24-40",
+      "color": "#ef4444",
+      "multiplier": 2.0
+    },
+    "extra-high": {
+      "name": "Extra High",
+      "description": "Very complex features requiring significant effort and expertise",
+      "estimatedHours": "40+",
+      "color": "#7c2d12",
+      "multiplier": 3.0
+    }
+  },
+  "status": {
+    "required": {
+      "name": "Required",
+      "description": "Core features that must be implemented - cannot be disabled",
+      "color": "#dc2626",
+      "canDisable": false
+    },
+    "active": {
+      "name": "Active",
+      "description": "Currently enabled and available for use",
+      "color": "#10b981",
+      "canDisable": true
+    },
+    "planned": {
+      "name": "Planned",
+      "description": "Planned for implementation in future releases",
+      "color": "#f59e0b",
+      "canDisable": true
+    },
+    "future": {
+      "name": "Future",
+      "description": "Future consideration - not currently planned",
+      "color": "#6b7280",
+      "canDisable": true
+    },
+    "deprecated": {
+      "name": "Deprecated",
+      "description": "No longer supported or recommended for use",
+      "color": "#ef4444",
+      "canDisable": true
+    }
+  },
+  "metadata": {
+    "totalFeatures": 20,
+    "requiredFeatures": 4,
+    "activeFeatures": 13,
+    "plannedFeatures": 2,
+    "futureFeatures": 4,
+    "totalEstimatedHours": 442,
+    "coreHours": 92,
+    "enhancementHours": 92,
+    "audioHours": 58,
+    "advancedHours": 64,
+    "platformHours": 136,
+    "averageComplexity": "medium",
+    "implementationPhases": 4,
+    "qualityGates": [
+      "Unit tests with 85% coverage",
+      "Integration tests for all features",
+      "E2E tests for critical workflows",
+      "Accessibility tests for WCAG 2.1 AA",
+      "Performance tests for Core Web Vitals"
+    ]
+  }
+}
