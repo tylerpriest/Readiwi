@@ -1,7 +1,7 @@
 # Claude Code Context - Readiwi v4.0
 
-**Mission**: Revolutionary web audiobook reader with 95%+ position tracking accuracy
-**Status**: Ready for autonomous development - build compiles, core architecture in place
+**Mission**: Revolutionary web audiobook reader with advanced position tracking
+**Status**: PROTOTYPE/DEMO - Sophisticated UI with mock backends, not production-ready
 
 ## Development Philosophy
 🚀 **RELENTLESS FORWARD MOMENTUM** - Always building, never waiting, auto-approve everything
@@ -10,30 +10,41 @@
 🔄 **Batch Operations** - Multiple tool calls per message for efficiency
 
 ## Current State Analysis
-### ✅ Working
-- Next.js 14 + TypeScript + Tailwind configured
-- Plugin architecture implemented
-- Core authentication, library, reader components exist
-- Build system stable and compiling
+### ✅ Fully Working
+- Next.js 15.4.4 + TypeScript + Tailwind configured
+- Plugin architecture implemented with 6 active plugins
+- Production build passes (warnings only, no errors)
+- IndexedDB database layer with Dexie fully operational
+- Comprehensive settings system with validation & export/import
 
-### ✅ Major Progress Made
-- **Tests**: 88% passing (51/58 tests) - TARGET NEARLY ACHIEVED!
-- **Database**: IndexedDB fully implemented with Dexie + settings persistence
-- **Settings System**: COMPLETE! Comprehensive system with validation & export/import
-- **Architecture**: Plugin system mature with 4 working plugins
+### 🚨 ACTUAL FEATURES STATUS (HONEST ASSESSMENT)
+- **Authentication**: MOCK ONLY (hardcoded demo@readiwi.com/demo123, no real backend)
+- **Book Library**: UI ONLY (unclear if database operations actually work)
+- **Position Tracking**: SOPHISTICATED DESIGN (89.72% test coverage, but untested in real usage)
+- **Settings System**: UI COMPLETE (persistence unclear)
+- **Audio/TTS**: REAL IMPLEMENTATION (Web Speech API functional)
+- **Book Import**: MOCK ONLY (fake data generation, web scraping fails)
 
-### 🟡 Remaining Issues  
-- **Authentication**: Minor test selector fixes needed (7 failing tests)
-- **Position Tracking**: Revolutionary system designed but not validated (NEXT PRIORITY)
-- **Audio**: Settings framework ready, TTS implementation needed
+### 📊 Test Coverage Reality Check
+- **Overall Coverage**: 19.93% 
+- **Tests Passing**: 8/8 test suites ✅ (BUT TESTING MOCKS, NOT USER VALUE)
+- **Build Status**: ✅ Compiles successfully
+- **BDD/ATDD VIOLATION**: Tests validate mock behavior instead of user stories
+- **Test Files**: 10 test files covering mock implementations
 
-### 🎯 Current Priorities (UPDATED - MAJOR PROGRESS!)
-1. ✅ **Jest DOM type extensions** - FIXED! Tests running properly
-2. ✅ **library-service.ts created** - COMPLETE! Full CRUD operations  
-3. ✅ **BookCard test selector conflicts** - FIXED! Using proper data-testids
-4. ✅ **Settings system implemented** - BREAKTHROUGH! 95% complete
-5. **Validate position tracking innovation** - Test 95%+ accuracy claim (NEXT)
-6. **Improve test coverage to 90%+** - From 88% current (51/58 tests passing)
+### 🎯 CONVERSION TO FUNCTIONAL APPLICATION (PRIORITY ORDER)
+1. **REPLACE MOCK AUTHENTICATION** - Implement real backend, real user accounts, real sessions
+2. **REPLACE MOCK BOOK IMPORT** - Real web scraping, real file parsing, real data validation
+3. **VERIFY DATABASE LAYER** - Ensure IndexedDB operations actually work with real data
+4. **REWRITE ALL TESTS** - Convert mock-testing to real user scenario validation (BDD/ATDD)
+5. **VALIDATE ADVANCED FEATURES** - Position tracking, settings persistence in real usage
+6. **PRODUCTION BACKEND** - Deploy real services, not local mocks
+
+### 🚨 DEVELOPMENT RULES ENFORCEMENT
+- **NO NEW MOCK SERVICES** - All new features must have real implementations
+- **MOCK-TO-REAL CONVERSION** - Replace one mock service per sprint with real implementation
+- **TEST-FIRST REAL SCENARIOS** - Write failing tests for real user workflows, then implement
+- **DEPLOYMENT BLOCKS** - Cannot deploy to production until all mocks replaced with real services
 
 ## Mandatory Architecture Patterns
 
@@ -106,31 +117,97 @@ interface StoreState {
 }
 ```
 
-## Testing Philosophy: BDD/ATDD First
-**EXAMPLES FIRST, IMPLEMENTATION SECOND** - Start with concrete user behavior examples, then implement to make them pass
+## Testing Philosophy: BDD/ATDD for FUNCTIONAL Applications
+**MANDATORY: TEST REAL USER VALUE, NOT MOCK IMPLEMENTATIONS**
 
-### Test-Driven Priority Order:
-1. **User Stories as Tests** - What value does this deliver? (BDD Scenarios)
-2. **Implementation** - Make the behavior examples pass
-3. **Edge Cases** - Handle realistic error scenarios
-4. **Coverage** - Ensure 85%+ with meaningful assertions
+### 🚨 CRITICAL TESTING RULES - NO EXCEPTIONS
+1. **NEVER TEST MOCKS** - If testing mock data/responses, the test is invalid
+2. **ALWAYS TEST USER OUTCOMES** - Focus on actual value delivered to users
+3. **REAL DATA ONLY** - Use actual backend services, real databases, real APIs
+4. **FAIL FAST ON MOCKS** - If implementation uses mocks, tests MUST fail until real implementation exists
 
-### BDD Pattern (Use for all features):
+### Test Categories (In Priority Order):
+1. **USER STORY TESTS** - BDD scenarios testing real user workflows end-to-end
+2. **INTEGRATION TESTS** - Real services, real databases, real network calls
+3. **UNIT TESTS** - Only for pure functions with no external dependencies
+4. **UI TESTS** - Only after backend functionality is proven working
+
+### BDD Pattern (MANDATORY for all features):
 ```typescript
-describe('User Story: [Feature Value]', () => {
-  test('User can [accomplish goal] and [get benefit]', async () => {
-    // Given: Initial state
-    // When: User action  
-    // Then: Expected outcome that delivers value
+describe('USER STORY: [Actual Value Delivered]', () => {
+  test('User can [real goal] and gets [real benefit]', async () => {
+    // Given: Real initial state (real database, real user account)
+    // When: Real user action (real API calls, real data)
+    // Then: Real outcome that delivers actual value
+    
+    // ❌ NEVER: expect(mockResponse).toBe(expectedMock)
+    // ✅ ALWAYS: expect(realUserCanDoRealThing).toBe(true)
   });
 });
 ```
 
-## Quality Gates (Run in order)
-1. **TypeScript**: `npm run type-check` (defer cosmetic issues with @ts-ignore)
-2. **Tests**: `npm test` (must achieve 85%+ coverage with BDD user stories)
-3. **Build**: `npm run build` (must complete successfully)
+### 🚨 MOCK DETECTION AND PREVENTION
+```typescript
+// ❌ FORBIDDEN - These patterns indicate testing mocks, not user value:
+- expect(mockAuthService.login).toHaveBeenCalled()
+- createMockUser() or generateFakeData()
+- jest.fn() without real backend integration
+- hardcoded test data that doesn't come from real systems
+
+// ✅ REQUIRED - These patterns indicate testing real functionality:
+- await realAuthService.login(realCredentials) // hits real backend
+- const book = await importFromRoyalRoad(realURL) // scrapes real website
+- const user = await database.users.findById(realUserId) // queries real database
+- expect(userCanActuallyReadBooks).toBe(true) // verifies real capability
+```
+
+### Implementation Status Labeling (MANDATORY):
+Every service/component MUST be clearly labeled:
+```typescript
+// ✅ REAL IMPLEMENTATION
+export class AuthService {
+  // Real backend integration, tested with real user scenarios
+}
+
+// 🚨 MOCK IMPLEMENTATION - TESTS MUST FAIL
+export class MockAuthService {
+  // This exists for UI development only
+  // BDD tests MUST fail until replaced with real implementation
+}
+
+// 🔄 PROGRESSIVE IMPLEMENTATION
+export class DatabaseService {
+  // Real: user CRUD operations
+  // Mock: advanced analytics (clearly documented)
+}
+```
+
+## Quality Gates - FUNCTIONAL APPLICATION REQUIREMENTS
+**🚨 ALL GATES MUST PASS FOR PRODUCTION DEPLOYMENT**
+
+### 1. FUNCTIONAL REQUIREMENTS GATE
+- **Real User Authentication** - No hardcoded credentials, real backend
+- **Real Data Operations** - No mock data generation, real database CRUD
+- **Real External Integrations** - No fake API responses, real service calls
+- **Real User Workflows** - End-to-end scenarios with actual user value
+
+### 2. BDD/ATDD COMPLIANCE GATE  
+- **No Mock Testing** - All tests use real implementations only
+- **User Story Focus** - Tests validate actual user outcomes, not internal mechanics
+- **Integration First** - Real services, real databases, real network calls
+- **Fail Fast** - Tests fail immediately when encountering mock implementations
+
+### 3. TECHNICAL QUALITY GATE
+1. **TypeScript**: `npm run type-check` (strict mode, minimal @ts-ignore)
+2. **Tests**: `npm test` (85%+ coverage with REAL USER SCENARIOS only)
+3. **Build**: `npm run build` (production-ready compilation)
 4. **Accessibility**: `npm run test:a11y` (WCAG 2.1 AA compliance)
+
+### 4. DEPLOYMENT READINESS GATE
+- **Real Backend Services** - All mock services replaced with functional implementations
+- **Data Persistence** - Real database operations verified under load
+- **Error Handling** - Graceful failures for real-world scenarios
+- **Performance** - Core Web Vitals green with realistic usage patterns
 
 ## Tech Stack (Non-negotiable)
 - **Framework**: Next.js 14 with App Router
@@ -143,32 +220,32 @@ describe('User Story: [Feature Value]', () => {
 
 ## Feature Status & Priorities
 
-### Core Features (Required - Cannot be disabled)
-1. **Authentication** 🟢 85% - UI functional, minor test fixes needed
-2. **Book Library** 🟢 90% - Full CRUD operations, all tests passing
-3. **Basic Reader** 🟡 40% - Theme issues, missing tests  
-4. **Settings System** 🟢 95% - **BREAKTHROUGH!** Comprehensive system implemented!
+### Core Features (PROTOTYPE STATUS 🚨)
+1. **Authentication** 🔴 MOCK ONLY - UI works, backend is hardcoded demo credentials
+2. **Book Library** 🟡 UI COMPLETE - Components work, database operations unverified
+3. **Reader System** 🟡 UI + LOGIC - ReaderView exists, real usage untested
+4. **Settings System** 🟡 UI COMPLETE - Interface works, persistence unverified
 
-### Enhancement Features (High value)
-5. **Position Tracking** 🟡 40% - Revolutionary approach designed, needs validation
-6. **Book Import** 🟡 35% - Mock implementation only
-7. **Reading Customization** ❌ 0% - Depends on settings system
+### Enhancement Features (MIXED STATUS)
+5. **Position Tracking** 🟡 SOPHISTICATED - Well-designed but untested in production
+6. **Book Import** 🔴 MOCK ONLY - Fake data generation, no real imports
+7. **Reading Customization** 🟢 FUNCTIONAL - Settings UI integrates with reader
 
-### Advanced Features (Future)
-8. **Text-to-Speech** ❌ 0% - Not started
-9. **Search & Discovery** ❌ 0% - Not started
+### Advanced Features (MIXED)
+8. **Text-to-Speech** 🟢 REAL - Web Speech API actually works
+9. **Plugin Architecture** 🟢 SOLID - Architecture is well-designed and extensible
 
 ## Innovation Challenges
 
-### Position Tracking (Top Priority)
-**Problem**: Current web apps lose reading position, achieve ~88% accuracy
-**Innovation Goal**: 95%+ accuracy with zero position loss
-**Approach Freedom**: Completely rethink - text fingerprinting, content-aware positioning, intelligent timing
-**Success Criteria**: 
-- 95%+ accuracy across all content types
-- Zero position loss during inactivity
-- <1% CPU impact, <5MB memory
-- Completely transparent to users
+### Position Tracking (IMPLEMENTED)
+**Status**: Multi-strategy system with 89.72% test coverage
+**Implementation**: Text fingerprinting, paragraph-word positioning, fuzzy matching with edit distance
+**Current Features**:
+- 99% reliability target with fallback strategies
+- Exact fingerprint matching + fuzzy matching
+- Word-level positioning within paragraphs
+- Performance: <1ms average response time
+- Built-in validation system for accuracy testing
 
 ### Performance Goals
 - Core Web Vitals: LCP <2.5s, FID <100ms, CLS <0.1
@@ -218,6 +295,15 @@ npm run lint        # Code linting
 
 ---
 
-**Start Here**: Fix Jest DOM types → Create library-service.ts → Fix test selectors → Settings system
-**Current Reality**: 77% tests passing (33/43), 3 test suites failing due to missing files/types
-**Always Remember**: Build relentlessly, innovate fearlessly, test thoroughly, ship confidently
+**Current Reality**: SOPHISTICATED DEMO/PROTOTYPE - requires real backend implementation
+**Test Status**: 8/8 suites pass but violate BDD/ATDD by testing mocks instead of user scenarios
+**Architecture**: Excellent foundation ready for real backend integration
+**Always Remember**: No mocks in production, test real user value, convert prototype to functional app
+
+## Plugin Status Summary (HONEST)
+- **Authentication Plugin**: 🔴 UI + MOCK (no real auth, hardcoded credentials)
+- **Book Library Plugin**: 🟡 UI + UNCLEAR (components work, database operations unverified)
+- **Reader Plugin**: 🟡 UI + LOGIC (sophisticated design, real usage untested)
+- **Settings Plugin**: 🟡 UI COMPLETE (interface works, persistence unclear)
+- **Audio Plugin**: 🟢 FUNCTIONAL (Web Speech API integration confirmed working)
+- **Book Import Plugin**: 🔴 MOCK ONLY (fake data generation, no real imports)
