@@ -17,7 +17,7 @@
     "test:a11y": "jest --testPathPattern=accessibility",
     "audit:performance": "npm run build && npx lighthouse http://localhost:3000 --output html --output-path lighthouse-report.html",
     "audit:bundle-size": "npm run build && npx @next/bundle-analyzer",
-    "audit:security": "npm audit"
+    "audit:security": "npm audit",
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
