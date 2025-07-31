@@ -3,67 +3,51 @@
  * Plugin for importing books from web sources
  */
 
-import { Plugin } from '@/core/types/plugin';
+import React from 'react';
+import { Plugin, ComponentRegistry, RouteRegistry, StoreRegistry, ServiceRegistry } from '@/core/types/plugin';
 
-export const bookImportPlugin: Plugin = {
-  id: 'book-import',
-  name: 'Book Import',  
-  version: '1.0.0',
-  description: 'Import books from web novel platforms like Royal Road',
-  dependencies: ['book-library', 'settings'],
-  enabled: true,
+class BookImportPluginImpl implements Plugin {
+  id = 'book-import';
+  name = 'Book Import';
+  version = '1.0.0';
+  dependencies = ['book-library', 'settings'];
+  enabled = true;
 
-  async initialize() {
+  async initialize(): Promise<void> {
     console.log('Book Import plugin initialized');
-  },
+  }
 
-  async activate() {
+  async activate(): Promise<void> {
     console.log('Book Import plugin activated');
-  },
+  }
 
-  async deactivate() {
+  async deactivate(): Promise<void> {
     console.log('Book Import plugin deactivated');
-  },
+  }
 
-  async cleanup() {
+  async cleanup(): Promise<void> {
     console.log('Book Import plugin cleaned up');
-  },
+  }
 
-  // UI Components
-  components: {
-    ImportView: () => import('./components/ImportView'),
-  },
+  registerComponents(): ComponentRegistry {
+    return {
+      'import-view': React.lazy(() => import('./components/ImportView')),
+    };
+  }
 
-  // Routes
-  routes: [
-    {
-      path: '/import',
-      component: () => import('./components/ImportView'),
-      name: 'Import Books',
-      description: 'Import books from web sources',
-    },
-  ],
+  registerRoutes(): RouteRegistry {
+    return {};
+  }
 
-  // Settings
-  settings: {
-    maxConcurrentImports: {
-      type: 'number',
-      default: 1,
-      min: 1,
-      max: 3,
-      description: 'Maximum number of books to import simultaneously',
-    },
-    requestDelay: {
-      type: 'number',
-      default: 500,
-      min: 100,
-      max: 2000,
-      description: 'Delay between requests (ms) to avoid rate limiting',
-    },
-    autoAddToLibrary: {
-      type: 'boolean',
-      default: true,
-      description: 'Automatically add imported books to library',
-    },
-  },
-};
+  registerStores(): StoreRegistry {
+    return {};
+  }
+
+  registerServices(): ServiceRegistry {
+    return {
+      'import-service': () => import('./services/import-service'),
+    };
+  }
+}
+
+export const bookImportPlugin = new BookImportPluginImpl();

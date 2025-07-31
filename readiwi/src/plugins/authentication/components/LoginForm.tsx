@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card';
 import { cn } from '@/core/utils/cn';
 import { useAuthStore } from '../stores/auth-store';
 import { LoginCredentials, ValidationError } from '../types/auth-types';

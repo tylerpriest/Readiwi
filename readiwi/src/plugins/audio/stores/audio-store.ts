@@ -115,7 +115,7 @@ const useAudioStore = create<AudioStoreState>()(
       },
       
       updateTTSState: (ttsState: TTSState) => {
-        set((state) => ({
+        set(() => ({
           ttsState,
           isReading: ttsState.speaking,
         }));

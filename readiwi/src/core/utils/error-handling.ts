@@ -141,9 +141,9 @@ async function storeErrorLog(errorInfo: ErrorInfo): Promise<void> {
     await db.errorLogs.add({
       level: errorInfo.severity as any,
       message: errorInfo.message,
-      context: errorInfo.context,
+      context: errorInfo.context || {},
       timestamp: errorInfo.timestamp,
-      userId: errorInfo.userId,
+      userId: errorInfo.userId || 'anonymous',
     });
   } catch (error) {
     // Don't throw here to avoid infinite error loops

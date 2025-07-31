@@ -17,7 +17,7 @@ export class BookRepository extends BaseRepository<Book> {
 
   async findFavorites(): Promise<Book[]> {
     try {
-      return await this.db.books.where('isFavorite').equals(true).toArray();
+      return await this.db.books.where('isFavorite').equals(1).toArray();
     } catch (error) {
       throw new Error(`Failed to find favorite books: ${error}`);
     }
@@ -56,10 +56,12 @@ export class BookRepository extends BaseRepository<Book> {
             currentProgress: latestProgress[0],
           };
         }
-        return { ...book };
+        return { 
+          ...book,
+        };
       });
 
-      return await Promise.all(progressPromises);
+      return await Promise.all(progressPromises) as BookWithProgress[];
     } catch (error) {
       throw new Error(`Failed to find books with progress: ${error}`);
     }

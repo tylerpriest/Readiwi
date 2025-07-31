@@ -85,14 +85,14 @@ export class ReadiwiDatabase extends Dexie {
       obj.createdAt = now;
       obj.updatedAt = now;
       obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
+      (obj as any).version = 1;
     });
 
     // @ts-ignore - Dexie hook parameters for progressive development
     this.books.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
+      (modifications as any).updatedAt = new Date();
+      if ((obj as any).version) {
+        (modifications as any).version = (obj as any).version + 1;
       }
     });
 
@@ -102,14 +102,14 @@ export class ReadiwiDatabase extends Dexie {
       obj.createdAt = now;
       obj.updatedAt = now;
       obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
+      (obj as any).version = 1;
     });
 
     // @ts-ignore - Dexie hook parameters for progressive development
     this.chapters.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
+      (modifications as any).updatedAt = new Date();
+      if ((obj as any).version) {
+        (modifications as any).version = (obj as any).version + 1;
       }
     });
 
@@ -120,7 +120,7 @@ export class ReadiwiDatabase extends Dexie {
       obj.updatedAt = now;
       obj.timestamp = now;
       obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
+      (obj as any).version = 1;
     });
 
     // @ts-ignore - Dexie hook parameters for progressive development
@@ -129,14 +129,14 @@ export class ReadiwiDatabase extends Dexie {
       obj.createdAt = now;
       obj.updatedAt = now;
       obj.syncStatus = SyncStatus.LOCAL_ONLY;
-      obj.version = 1;
+      (obj as any).version = 1;
     });
 
     // @ts-ignore - Dexie hook parameters for progressive development
     this.userSettings.hook('updating', (modifications, primKey, obj, trans) => {
-      modifications.updatedAt = new Date();
-      if (obj.version) {
-        modifications.version = obj.version + 1;
+      (modifications as any).updatedAt = new Date();
+      if ((obj as any).version) {
+        (modifications as any).version = (obj as any).version + 1;
       }
     });
   }

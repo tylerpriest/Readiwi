@@ -1,8 +1,5 @@
+import React from 'react';
 import { Plugin, ComponentRegistry, RouteRegistry, StoreRegistry, ServiceRegistry } from '@/core/types/plugin';
-
-interface AudioPlugin extends Plugin {
-  // Audio plugin-specific properties
-}
 
 class AudioPluginImpl implements Plugin {
   id = 'audio';
@@ -33,8 +30,8 @@ class AudioPluginImpl implements Plugin {
 
   registerComponents(): ComponentRegistry {
     return {
-      'audio-controls': () => import('./components/AudioControls'),
-      'tts-controls': () => import('./components/TTSControls'),
+      'audio-controls': React.lazy(() => import('./components/AudioControls')),
+      'tts-controls': React.lazy(() => import('./components/TTSControls')),
     };
   }
 
