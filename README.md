@@ -17,8 +17,7 @@
 ├── PATTERNS.md            # ← Code patterns and structures  
 ├── FEATURES.md            # ← Feature status and priorities
 ├── readiwi/               # ← Application code
-├── archived_docs/         # ← Historical documentation
-└── specs/                 # ← Remaining reference materials
+└── archived_docs/         # ← Historical documentation
 ```
 
 ## Development Philosophy
