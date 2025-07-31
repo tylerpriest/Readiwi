@@ -1,6 +1,3 @@
-- [ ] Remember to check TODO.md periodically record this in Claude.md or somewhere to make sure it happens, and that when you tick it off it gets moved below the ones still todo     
-- [ ] Can you integrate with Vercel so you can send builds to them and get the results
-
 - [ ] Clean up unused imports and variables across codebase
 - [ ] Design local-first architecture with future Supabase sync
 - [ ] Plan Book Import implementation using existing IndexedDB
