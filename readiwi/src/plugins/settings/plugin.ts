@@ -3,6 +3,7 @@
  * Plugin registration for settings functionality
  */
 
+import React from 'react';
 import { BasePlugin } from '@/core/utils/base-plugin';
 import { ComponentRegistry, RouteRegistry, StoreRegistry, ServiceRegistry } from '@/core/types/plugin';
 
@@ -31,13 +32,13 @@ class SettingsPlugin extends BasePlugin {
 
   registerComponents(): ComponentRegistry {
     return {
-      'settings-page': () => import('./components/SettingsPage'),
-      'reading-settings': () => import('./components/ReadingSettings'),
-      'audio-settings': () => import('./components/AudioSettings'),
-      'import-settings': () => import('./components/ImportSettings'),
-      'privacy-settings': () => import('./components/PrivacySettings'),
-      'accessibility-settings': () => import('./components/AccessibilitySettings'),
-      'keyboard-settings': () => import('./components/KeyboardSettings'),
+      'settings-page': React.lazy(() => import('./components/SettingsPage')),
+      'reading-settings': React.lazy(() => import('./components/ReadingSettings')),
+      'audio-settings': React.lazy(() => import('./components/AudioSettings')),
+      'import-settings': React.lazy(() => import('./components/ImportSettings')),
+      'privacy-settings': React.lazy(() => import('./components/PrivacySettings')),
+      'accessibility-settings': React.lazy(() => import('./components/AccessibilitySettings')),
+      'keyboard-settings': React.lazy(() => import('./components/KeyboardSettings')),
     };
   }
 

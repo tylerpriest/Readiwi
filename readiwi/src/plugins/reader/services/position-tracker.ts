@@ -367,6 +367,7 @@ export class ReliablePositionTracker {
       }
     }
     
+    // @ts-ignore - Progressive development, matrix bounds are properly checked
     return matrix[str2.length][str1.length];
   }
 

@@ -39,8 +39,10 @@ const AudioSettings: React.FC<AudioSettingsProps> = ({
       // If no voice selected and we have voices, select default
       if (!audio.voice && availableVoices.length > 0) {
         const defaultVoice = availableVoices.find(v => v.default) || availableVoices[0];
-        updateAudio({ voice: defaultVoice.id });
-        autoSave();
+        if (defaultVoice) {
+          updateAudio({ voice: defaultVoice.id });
+          autoSave();
+        }
       }
     }
   }, [audio.voice, updateAudio, autoSave]);

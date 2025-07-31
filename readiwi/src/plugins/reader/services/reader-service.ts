@@ -11,8 +11,7 @@ export class ReaderService {
       const chapters = await db.chapters
         .where('bookId')
         .equals(bookId)
-        .orderBy('index')
-        .toArray();
+        .sortBy('index');
       
       return chapters.map(this.mapChapterFromDatabase);
     } catch (error) {
@@ -71,7 +70,7 @@ export class ReaderService {
       await db.readingProgress.put({
         bookId,
         chapterId: position.chapterId,
-        position: position.characterOffset, // Map to database 'position' field
+        textPosition: position.characterOffset, // Map to database textPosition field
         scrollPosition: position.scrollPosition,
         timestamp: position.timestamp,
         createdAt: new Date(),
@@ -92,8 +91,9 @@ export class ReaderService {
       const position = await db.readingProgress
         .where('bookId')
         .equals(bookId)
-        .orderBy('timestamp')
-        .last();
+        .reverse()
+        .sortBy('timestamp')
+        .then(positions => positions[0] || null);
       
       if (!position) {
         return null;
@@ -101,7 +101,7 @@ export class ReaderService {
       
       return {
         chapterId: position.chapterId,
-        characterOffset: position.characterOffset,
+        characterOffset: position.textPosition || 0,
         scrollPosition: position.scrollPosition,
         timestamp: position.timestamp,
       };
