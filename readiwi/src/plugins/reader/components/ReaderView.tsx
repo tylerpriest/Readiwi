@@ -14,6 +14,7 @@ import {
   Loader2,
   Clock
 } from 'lucide-react';
+import AudioControls from '@/plugins/audio/components/AudioControls';
 
 interface ReaderViewProps {
   className?: string; // @description Additional CSS classes
@@ -187,10 +188,22 @@ const ReaderView: React.FC<ReaderViewProps> = ({
         </div>
       </header>
 
+      {/* Audio Controls */}
+      <div className="sticky top-[73px] z-10 bg-background/95 backdrop-blur border-b">
+        <div className="container mx-auto px-4 py-2">
+          <AudioControls
+            text={currentChapter?.content || ''}
+            showSettings={true}
+            onSettingsClick={toggleSettings}
+            data-testid="reader-audio-controls"
+          />
+        </div>
+      </div>
+
       {/* Settings Panel */}
       {isSettingsVisible && (
         <div 
-          className="sticky top-[73px] z-10 bg-muted/50 border-b"
+          className="sticky top-[110px] z-10 bg-muted/50 border-b"
           data-testid="reading-settings-panel"
         >
           <div className="container mx-auto px-4 py-3">
@@ -203,7 +216,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
 
       {/* Chapter Navigation */}
       <div 
-        className="sticky top-[73px] z-10 bg-background/80 backdrop-blur border-b"
+        className="sticky top-[147px] z-10 bg-background/80 backdrop-blur border-b"
         data-testid="chapter-navigation"
       >
         <div className="container mx-auto px-4 py-2">
