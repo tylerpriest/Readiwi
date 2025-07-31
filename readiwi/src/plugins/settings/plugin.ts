@@ -6,6 +6,7 @@
 import React from 'react';
 import { BasePlugin } from '@/core/utils/base-plugin';
 import { ComponentRegistry, RouteRegistry, StoreRegistry, ServiceRegistry } from '@/core/types/plugin';
+import SettingsPage from './components/SettingsPage';
 
 class SettingsPlugin extends BasePlugin {
   id = 'settings';
@@ -44,7 +45,14 @@ class SettingsPlugin extends BasePlugin {
 
   registerRoutes(): RouteRegistry {
     return {
-      '/settings': () => import('./components/SettingsPage'),
+      '/settings': {
+        component: SettingsPage,
+        metadata: {
+          title: 'Settings',
+          description: 'Customize your reading experience',
+          requiresAuth: false
+        }
+      },
     };
   }
 

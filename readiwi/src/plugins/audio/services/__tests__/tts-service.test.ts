@@ -222,7 +222,7 @@ describe('User Story: Audio Reading Experience', () => {
       
       // Simulate error
       if (mockUtterance.onerror) {
-        mockUtterance.onerror({ error: 'synthesis-failed' } as any);
+        (mockUtterance.onerror as any)({ error: 'synthesis-failed' } as any);
       }
 
       // Then: Promise rejects gracefully
@@ -243,8 +243,8 @@ describe('User Story: Audio Reading Experience', () => {
       const speakPromise = ttsService.speak('Test', invalidSettings);
       
       // Simulate successful speech (service should clamp values)
-      if (mockUtterance.onstart) mockUtterance.onstart({} as any);
-      if (mockUtterance.onend) mockUtterance.onend({} as any);
+      if (mockUtterance.onstart) (mockUtterance.onstart as any)({} as any);
+      if (mockUtterance.onend) (mockUtterance.onend as any)({} as any);
 
       // Then: No error occurs (values are clamped)
       await expect(speakPromise).resolves.toBeUndefined();

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from '@axe-core/playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 /**
  * Core Reading Journey E2E Tests
@@ -8,7 +8,7 @@ import { injectAxe, checkA11y } from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await injectAxe(page);
+  // Axe will be injected automatically by AxeBuilder
 });
 
 test.describe('Epic 1: Core Reading Experience', () => {
@@ -73,7 +73,7 @@ test.describe('Epic 1: Core Reading Experience', () => {
       // Skip if reader interface is not available
       const readerContent = page.locator('[data-testid*="reading"], [data-testid*="content"], main');
       if (!(await readerContent.isVisible())) {
-        test.skip('Reader interface not available');
+        test.skip('Reader interface not available', () => {});
       }
       
       // When I scroll through the chapter while reading
@@ -201,7 +201,7 @@ test.describe('Epic 2: Audio Enhancement System', () => {
           await expect(playButton).toBeEnabled();
         }
       } else {
-        test.skip('Audio controls not available');
+        test.skip('Audio controls not available', () => {});
       }
     });
   });
@@ -233,7 +233,7 @@ test.describe('Epic 2: Audio Enhancement System', () => {
           await expect(testButton).toBeEnabled();
         }
       } else {
-        test.skip('Audio settings not available');
+        test.skip('Audio settings not available', () => {});
       }
     });
   });
@@ -246,17 +246,11 @@ test.describe('Accessibility Compliance', () => {
     await page.waitForLoadState('networkidle');
     
     // Run accessibility checks
-    await checkA11y(page, null, {
-      detailedReport: true,
-      detailedReportOptions: { html: true },
-      rules: {
-        // Focus on critical accessibility rules for reading apps
-        'color-contrast': { enabled: true },
-        'keyboard-navigation': { enabled: true },
-        'focus-management': { enabled: true },
-        'aria-labels': { enabled: true },
-      }
-    });
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withRules(['color-contrast', 'keyboard', 'focus-order-semantics', 'aria-required-attr'])
+      .analyze();
+    
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 
   test('Audio controls are keyboard accessible', async ({ page }) => {

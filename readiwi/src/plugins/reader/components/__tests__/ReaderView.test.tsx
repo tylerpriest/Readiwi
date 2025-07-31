@@ -69,7 +69,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
   describe('Given User Opens Book to Read', () => {
     test('User can see book content clearly formatted for reading', () => {
       // Given: User has a book selected
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Book content is displayed with proper formatting
       expect(screen.getByText('Test Book')).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
 
     test('User can see reading progress and navigation controls', () => {
       // Given: User is reading a multi-chapter book
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Reading controls and progress are visible
       expect(screen.getByTestId('chapter-navigation')).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
 
     test('User sees appropriate reading settings and customization options', () => {
       // Given: User wants to customize reading experience  
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Reading customization options are available
       expect(screen.getByTestId('reading-settings-toggle')).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
         updatePosition: mockUpdatePosition,
       });
 
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // When: User scrolls through content (simulating reading)
       const readingArea = screen.getByTestId('reading-content');
@@ -128,7 +128,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
         nextChapter: mockNextChapter,
       });
 
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // When: User clicks next chapter
       await user.click(screen.getByTestId('next-chapter-button'));
@@ -154,7 +154,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       });
 
       // When: User opens the book
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Position is restored automatically
       await waitFor(() => {
@@ -179,7 +179,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       });
 
       // When: User opens the reader
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Visual feedback indicates position restoration
       expect(screen.getByTestId('position-indicator')).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       const mockToggleSettings = jest.fn();
       
       // Initial render with settings closed
-      const { rerender } = render(<ReaderView />);
+      const { rerender } = render(<ReaderView bookId={1} />);
 
       // When: User opens reading settings
       await user.click(screen.getByTestId('reading-settings-toggle'));
@@ -206,7 +206,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       });
       
       // Re-render with settings visible
-      rerender(<ReaderView />);
+      rerender(<ReaderView bookId={1} />);
 
       // Then: Settings panel opens without disrupting reading flow
       expect(screen.getByTestId('reading-settings-panel')).toBeInTheDocument();
@@ -215,7 +215,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
     test('User reading experience adapts to different screen sizes', () => {
       // Given: User accesses reader on different devices
       // When: Reader is rendered
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Layout is responsive and readable
       const readingArea = screen.getByTestId('reading-content');
@@ -234,7 +234,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       });
 
       // When: User tries to read
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Clear error message is displayed
       expect(screen.getByText(/Failed to load book/i)).toBeInTheDocument();
@@ -250,7 +250,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
       });
 
       // When: User waits for book to load
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Loading indicator is displayed
       expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
@@ -268,7 +268,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
         reset: mockReset,
       });
 
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // When: User clicks retry
       await user.click(screen.getByRole('button', { name: /retry/i }));
@@ -281,7 +281,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
   describe('Integration with Position Tracking System', () => {
     test('Reader integrates seamlessly with position tracking service', () => {
       // Given: Reader view with position tracking enabled
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // Then: Position tracking integration is properly initialized
       expect(mockPositionTracker.createFingerprint).toBeDefined();
@@ -291,7 +291,7 @@ describe('User Story: Seamless Reading Experience with Perfect Position Tracking
     test('Position tracking works reliably during reading session', async () => {
       // Given: User is actively reading
       const user = userEvent.setup();
-      render(<ReaderView />);
+      render(<ReaderView bookId={1} />);
 
       // When: User interacts with reading content
       const readingArea = screen.getByTestId('reading-content');

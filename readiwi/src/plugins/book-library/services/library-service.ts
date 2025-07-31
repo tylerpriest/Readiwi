@@ -239,7 +239,7 @@ class LibraryService {
       const chapters = await db.chapters
         .where('bookId')
         .equals(bookId)
-        .and(chapter => chapter.index <= currentChapterId)
+        .and((chapter: any) => chapter.index <= currentChapterId)
         .count();
       
       return chapters;

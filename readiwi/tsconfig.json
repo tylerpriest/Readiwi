@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["jest", "@testing-library/jest-dom"],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,

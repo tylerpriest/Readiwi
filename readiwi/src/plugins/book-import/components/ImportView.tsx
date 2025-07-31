@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/core/utils/cn';
-import { bookImportService, ImportProgress } from '../services/import-service';
+import { importBook, getSupportedSources, isUrlSupported, validateUrl, ParserProgress } from '../services/book-import';
 
 interface ImportViewProps {
   className?: string;
@@ -24,7 +24,7 @@ const ImportView: React.FC<ImportViewProps> = ({
 }) => {
   const [url, setUrl] = useState('');
   const [importing, setImporting] = useState(false);
-  const [progress, setProgress] = useState<ImportProgress | null>(null);
+  const [progress, setProgress] = useState<ParserProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -35,7 +35,7 @@ const ImportView: React.FC<ImportViewProps> = ({
     }
 
     // Validate URL
-    const validation = bookImportService.validateUrl(url.trim());
+    const validation = validateUrl(url.trim());
     if (!validation.valid) {
       setError(validation.error || 'Invalid URL');
       return;
@@ -47,7 +47,7 @@ const ImportView: React.FC<ImportViewProps> = ({
     setProgress(null);
 
     try {
-      const result = await bookImportService.importBook(url.trim(), (progressUpdate) => {
+      const result = await importBook(url.trim(), (progressUpdate) => {
         setProgress(progressUpdate);
       });
 
@@ -69,8 +69,7 @@ const ImportView: React.FC<ImportViewProps> = ({
     setError('Import cancelled');
   }, []);
 
-  const supportedSources = bookImportService.getSupportedSources();
-  const stats = bookImportService.getImportStats();
+  const supportedSources = getSupportedSources();
 
   return (
     <div className={cn('space-y-6', className)} data-testid={testId}>
@@ -197,7 +196,7 @@ const ImportView: React.FC<ImportViewProps> = ({
         <CardHeader>
           <CardTitle>Supported Sources</CardTitle>
           <CardDescription>
-            Currently supporting {stats.supportedSources} out of {stats.totalSources} sources
+            Available import sources for web novels
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -238,7 +237,7 @@ const ImportView: React.FC<ImportViewProps> = ({
         </CardHeader>
         <CardContent>
           <ul className="grid gap-2">
-            {stats.features.map((feature, index) => (
+            {['Real-time progress tracking', 'Chapter-by-chapter parsing', 'Metadata extraction', 'Rate-limited requests', 'Error recovery'].map((feature, index) => (
               <li key={index} className="flex items-center gap-2 text-sm">
                 <div className="w-2 h-2 bg-primary rounded-full" />
                 {feature}

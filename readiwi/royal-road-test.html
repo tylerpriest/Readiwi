@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Royal Road Parser Test</title>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Royal Road Parser Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Mock Royal Road book page HTML
+        const mockRoyalRoadHTML = `
+            <div class="fic-header">
+                <h1>Test Novel Title</h1>
+                <h4><span><a href="/profile/123">Test Author</a></span></h4>
+            </div>
+            <div class="fiction-info">
+                <div class="description">
+                    <div property="description">This is a test novel description with multiple paragraphs.</div>
+                </div>
+                <span class="tags">
+                    <span class="label">Fantasy</span>
+                    <span class="label">Adventure</span>
+                </span>
+            </div>
+            <div id="chapters">
+                <a href="/fiction/12345/test-novel/chapter/1/chapter-one">Chapter 1: The Beginning</a>
+                <a href="/fiction/12345/test-novel/chapter/2/chapter-two">Chapter 2: The Journey</a>
+                <a href="/fiction/12345/test-novel/chapter/3/chapter-three">Chapter 3: The Challenge</a>
+            </div>
+        `;
+
+        // Mock chapter HTML
+        const mockChapterHTML = `
+            <h1 class="font-white">Chapter 1: The Beginning</h1>
+            <div class="chapter-content">
+                <p>This is the first paragraph of the chapter.</p>
+                <p>This is the second paragraph with more content.</p>
+                <p>And here's a third paragraph to make it realistic.</p>
+            </div>
+        `;
+
+        // Test parsing functions
+        function testBookParsing() {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(mockRoyalRoadHTML, 'text/html');
+            
+            // Extract title
+            const titleElement = doc.querySelector('h1') || 
+                                 doc.querySelector('.fic-header h1') ||
+                                 doc.querySelector('.fiction-title h1');
+            const title = titleElement?.textContent?.trim() || 'Unknown Title';
+            
+            // Extract author
+            const authorElement = doc.querySelector('h4 span a') || 
+                                  doc.querySelector('.fic-header h4 span a') ||
+                                  doc.querySelector('.author-link a');
+            const author = authorElement?.textContent?.trim() || 'Unknown Author';
+            
+            // Extract description
+            const descElement = doc.querySelector('.description [property="description"]') ||
+                                doc.querySelector('.fiction-info .description') ||
+                                doc.querySelector('.description');
+            const description = descElement?.textContent?.trim() || 'No description available.';
+            
+            // Extract tags
+            const tagElements = doc.querySelectorAll('.tags .label');
+            const tags = Array.from(tagElements).map(el => el.textContent?.trim() || '').filter(Boolean);
+            
+            // Extract chapter URLs
+            const chapterLinks = doc.querySelectorAll('#chapters a[href*="/chapter/"]') ||
+                                 doc.querySelectorAll('.chapter-row a[href*="/chapter/"]') ||
+                                 doc.querySelectorAll('a[href*="/chapter/"]');
+            
+            const chapterUrls = Array.from(chapterLinks).map(link => {
+                const href = link.getAttribute('href');
+                if (!href) return null;
+                return href.startsWith('http') ? href : `https://www.royalroad.com${href}`;
+            }).filter(Boolean);
+            
+            return { title, author, description, tags, chapterUrls };
+        }
+
+        function testChapterParsing() {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(mockChapterHTML, 'text/html');
+            
+            // Extract title
+            const titleElement = doc.querySelector('h1.font-white') || 
+                                 doc.querySelector('.chapter-title h1') ||
+                                 doc.querySelector('.chapter-title') ||
+                                 doc.querySelector('h1');
+            const title = titleElement?.textContent?.trim() || 'Chapter 1';
+            
+            // Extract content
+            const contentElement = doc.querySelector('.chapter-content') ||
+                                   doc.querySelector('.portlet-body') ||
+                                   doc.querySelector('.page-content-wrapper');
+            
+            const content = contentElement?.textContent?.trim() || '';
+            const wordCount = content.split(/\s+/).filter(word => word.length > 0).length;
+            
+            return { title, content, wordCount };
+        }
+
+        // Run tests
+        try {
+            console.log('Testing Royal Road book parsing...');
+            const bookResult = testBookParsing();
+            console.log('Book parsing result:', bookResult);
+            
+            console.log('Testing Royal Road chapter parsing...');
+            const chapterResult = testChapterParsing();
+            console.log('Chapter parsing result:', chapterResult);
+            
+            // Display results
+            document.getElementById('results').innerHTML = `
+                <h2>Parsing Results</h2>
+                <h3>Book Data:</h3>
+                <ul>
+                    <li><strong>Title:</strong> ${bookResult.title}</li>
+                    <li><strong>Author:</strong> ${bookResult.author}</li>
+                    <li><strong>Description:</strong> ${bookResult.description}</li>
+                    <li><strong>Tags:</strong> ${bookResult.tags.join(', ')}</li>
+                    <li><strong>Chapters Found:</strong> ${bookResult.chapterUrls.length}</li>
+                </ul>
+                
+                <h3>Chapter Data:</h3>
+                <ul>
+                    <li><strong>Title:</strong> ${chapterResult.title}</li>
+                    <li><strong>Word Count:</strong> ${chapterResult.wordCount}</li>
+                    <li><strong>Content Preview:</strong> ${chapterResult.content.substring(0, 100)}...</li>
+                </ul>
+                
+                <div style="color: green; margin-top: 20px;">
+                    ✅ All parsing tests completed successfully!
+                </div>
+            `;
+            
+        } catch (error) {
+            console.error('Parsing test failed:', error);
+            document.getElementById('results').innerHTML = `
+                <div style="color: red;">
+                    ❌ Parsing test failed: ${error.message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

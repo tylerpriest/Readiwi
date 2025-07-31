@@ -93,7 +93,7 @@ export class ReaderService {
         .equals(bookId)
         .reverse()
         .sortBy('timestamp')
-        .then(positions => positions[0] || null);
+        .then((positions: any[]) => positions[0] || null);
       
       if (!position) {
         return null;

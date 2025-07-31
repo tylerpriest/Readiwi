@@ -45,7 +45,7 @@ class BookImportPluginImpl implements Plugin {
 
   registerServices(): ServiceRegistry {
     return {
-      'import-service': () => import('./services/import-service'),
+      'book-import': () => import('./services/book-import'),
     };
   }
 }

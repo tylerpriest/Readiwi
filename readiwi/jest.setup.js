@@ -51,6 +51,13 @@ global.SpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
   volume: 1,
   rate: 1,
   pitch: 1,
+  onstart: null,
+  onend: null,
+  onerror: null,
+  onpause: null,
+  onresume: null,
+  onmark: null,
+  onboundary: null,
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
 }));
@@ -61,3 +68,18 @@ global.indexedDB = {
   deleteDatabase: jest.fn(),
   databases: jest.fn(),
 };
+
+// Mock fetch for Node.js environment
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(''),
+    headers: new Map(),
+  })
+);
+
+// Mock Request and Response for fetch
+global.Request = jest.fn();
+global.Response = jest.fn();

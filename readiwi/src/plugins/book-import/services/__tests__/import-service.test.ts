@@ -3,14 +3,14 @@
  * Testing that book import functions reliably for users
  */
 
-import { bookImportService } from '../import-service';
+import { getSupportedSources, importBook, isUrlSupported, validateUrl } from '../book-import';
 
 describe('User Story: Import Web Novels Easily', () => {
   describe('Source Detection and Validation', () => {
     test('User can check which sources are supported', () => {
       // Given: User wants to know supported sources
       // When: Getting supported sources
-      const sources = bookImportService.getSupportedSources();
+      const sources = getSupportedSources();
 
       // Then: List of sources is returned
       expect(Array.isArray(sources)).toBe(true);
@@ -32,7 +32,7 @@ describe('User Story: Import Web Novels Easily', () => {
 
       for (const url of invalidUrls) {
         // When: Validating invalid URL
-        const result = bookImportService.validateUrl(url);
+        const result = validateUrl(url);
 
         // Then: Clear error message is provided
         expect(result.valid).toBe(false);
@@ -50,7 +50,7 @@ describe('User Story: Import Web Novels Easily', () => {
 
       for (const url of validUrls) {
         // When: Validating valid URL
-        const result = bookImportService.validateUrl(url);
+        const result = validateUrl(url);
 
         // Then: URL is confirmed as valid
         expect(result.valid).toBe(true);
@@ -66,7 +66,7 @@ describe('User Story: Import Web Novels Easily', () => {
       const url = 'https://www.royalroad.com/fiction/12345/test-book';
 
       // When: Importing the book
-      const result = await bookImportService.importBook(url);
+      const result = await importBook(url);
 
       // Then: Book is successfully imported
       expect(result).toHaveProperty('title');
@@ -83,7 +83,7 @@ describe('User Story: Import Web Novels Easily', () => {
       const progressUpdates: any[] = [];
 
       // When: Importing with progress callback
-      await bookImportService.importBook(url, (progress) => {
+      await importBook(url, (progress) => {
         progressUpdates.push({ ...progress });
       });
 
@@ -107,7 +107,7 @@ describe('User Story: Import Web Novels Easily', () => {
       const url = 'https://www.royalroad.com/fiction/123/content-test';
 
       // When: Importing book
-      const book = await bookImportService.importBook(url);
+      const book = await importBook(url);
 
       // Then: Content is realistic and well-formatted
       expect(book.chapters.length).toBeGreaterThan(3); // Has multiple chapters
@@ -136,13 +136,13 @@ describe('User Story: Import Web Novels Easily', () => {
 
       // When: Attempting to import
       // Then: Clear error is thrown
-      await expect(bookImportService.importBook(url)).rejects.toThrow('Unsupported source URL');
+      await expect(importBook(url)).rejects.toThrow('Unsupported source URL');
     });
 
     test('Service provides helpful statistics', () => {
       // Given: Import service
       // When: Getting import statistics
-      const stats = bookImportService.getImportStats();
+      const stats = getImportStats();
 
       // Then: Useful statistics are provided
       expect(stats).toHaveProperty('supportedSources');
@@ -165,7 +165,7 @@ describe('User Story: Import Web Novels Easily', () => {
       const url = 'https://www.royalroad.com/fiction/555/title-variety-test';
 
       // When: Importing book
-      const book = await bookImportService.importBook(url);
+      const book = await importBook(url);
 
       // Then: Chapter titles are varied
       const titles = book.chapters.map(ch => ch.title);
@@ -183,7 +183,7 @@ describe('User Story: Import Web Novels Easily', () => {
     test('Word counts are realistic for web novel chapters', async () => {
       // Given: Imported book
       const url = 'https://www.royalroad.com/fiction/777/word-count-test';
-      const book = await bookImportService.importBook(url);
+      const book = await importBook(url);
 
       // When: Checking chapter word counts
       // Then: Word counts are in realistic range for web novels
@@ -206,7 +206,7 @@ describe('User Story: Import Web Novels Easily', () => {
 
       // When: Running concurrent imports
       const results = await Promise.all(
-        urls.map(url => bookImportService.importBook(url))
+        urls.map(url => importBook(url))
       );
 
       // Then: All imports complete successfully
@@ -218,7 +218,7 @@ describe('User Story: Import Web Novels Easily', () => {
       });
 
       // Results should be different (not sharing state)
-      expect(results[0].title).not.toBe(results[1].title);
+      expect(results[0]?.title).not.toBe(results[1]?.title);
     });
   });
 
@@ -228,7 +228,7 @@ describe('User Story: Import Web Novels Easily', () => {
       const url = 'https://www.royalroad.com/fiction/999/integration-test';
 
       // When: Importing book
-      const book = await bookImportService.importBook(url);
+      const book = await importBook(url);
 
       // Then: All library-required fields are present
       const requiredFields = [

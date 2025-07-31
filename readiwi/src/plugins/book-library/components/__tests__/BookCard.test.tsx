@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BookCard from '../BookCard';
-import { BookStatus } from '@/core/types/database';
+import { BookStatus, SyncStatus } from '@/core/types/database';
 import { BookWithMetadata } from '../../types/library-types';
 
 const mockBook: BookWithMetadata = {
@@ -15,6 +15,10 @@ const mockBook: BookWithMetadata = {
   tags: ['fantasy', 'adventure'],
   totalChapters: 50,
   wordCount: 100000,
+  language: 'en',
+  isOfflineAvailable: true,
+  syncStatus: SyncStatus.SYNCED,
+  version: 1,
   createdAt: new Date('2024-01-01'),
   updatedAt: new Date('2024-01-15'),
   lastReadAt: new Date('2024-01-10'),
@@ -69,7 +73,8 @@ describe('BookCard', () => {
     });
 
     it('should show read button for books without progress', () => {
-      const bookWithoutProgress = { ...mockBook, currentProgress: undefined };
+      const bookWithoutProgress = { ...mockBook };
+      delete (bookWithoutProgress as any).currentProgress;
       
       render(
         <BookCard
@@ -244,7 +249,7 @@ describe('BookCard', () => {
         { status: BookStatus.READING, text: 'Reading', color: 'text-blue-600' },
         { status: BookStatus.ON_HOLD, text: 'On Hold', color: 'text-yellow-600' },
         { status: BookStatus.DROPPED, text: 'Dropped', color: 'text-red-600' },
-        { status: BookStatus.NOT_STARTED, text: 'Not Started', color: 'text-gray-600' },
+        { status: BookStatus.READY, text: 'Ready', color: 'text-gray-600' },
       ];
 
       statuses.forEach(({ status, text, color }) => {

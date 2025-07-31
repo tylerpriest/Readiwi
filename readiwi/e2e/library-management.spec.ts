@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from '@axe-core/playwright';
+// Accessibility testing imports - currently unused in tests
+// import AxeBuilder from '@axe-core/playwright';
 
 /**
  * Library Management E2E Tests
@@ -8,7 +9,7 @@ import { injectAxe, checkA11y } from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  await injectAxe(page);
+  // Axe will be injected automatically by AxeBuilder
 });
 
 test.describe('Epic 3: Book Library Management', () => {
@@ -50,7 +51,7 @@ test.describe('Epic 3: Book Library Management', () => {
           await expect(importButton).toBeEnabled();
         }
       } else {
-        test.skip('Import interface not available in current build');
+        test.skip('Import interface not available in current build', () => {});
       }
     });
 
@@ -84,7 +85,7 @@ test.describe('Epic 3: Book Library Management', () => {
           await expect(networkError).toBeVisible();
         }
       } else {
-        test.skip('Import interface not fully implemented');
+        test.skip('Import interface not fully implemented', () => {});
       }
     });
   });
@@ -130,7 +131,7 @@ test.describe('Epic 3: Book Library Management', () => {
           await expect(filterOptions).toBeVisible();
         }
       } else {
-        test.skip('Library interface not available');
+        test.skip('Library interface not available', () => {});
       }
     });
 
@@ -165,7 +166,7 @@ test.describe('Epic 3: Book Library Management', () => {
           await expect(libraryItems).toBeVisible();
         }
       } else {
-        test.skip('Search functionality not implemented');
+        test.skip('Search functionality not implemented', () => {});
       }
     });
 
@@ -225,7 +226,7 @@ test.describe('Epic 4: Settings and Customization', () => {
           await expect(audioSettings).toBeVisible();
         }
       } else {
-        test.skip('Settings interface not available');
+        test.skip('Settings interface not available', () => {});
       }
     });
 
@@ -254,7 +255,7 @@ test.describe('Epic 4: Settings and Customization', () => {
         // Background should change (different RGB values)
         expect(newBg).not.toBe(initialBg);
       } else {
-        test.skip('Theme switching not implemented');
+        test.skip('Theme switching not implemented', () => {});
       }
     });
 
@@ -309,7 +310,7 @@ test.describe('Epic 4: Settings and Customization', () => {
         await expect(exportButton).toBeVisible();
         await expect(exportButton).toBeEnabled();
       } else {
-        test.skip('Data export not implemented');
+        test.skip('Data export not implemented', () => {});
       }
     });
 
@@ -334,7 +335,7 @@ test.describe('Epic 4: Settings and Customization', () => {
           await expect(firstToggle).toBeEnabled();
         }
       } else {
-        test.skip('Privacy settings not implemented');
+        test.skip('Privacy settings not implemented', () => {});
       }
     });
   });
@@ -379,7 +380,7 @@ test.describe('Cross-Feature Integration Tests', () => {
       expect(newBodyBg).toBe(bodyBg);
       await newPage.close();
     } else {
-      test.skip('Theme persistence cannot be tested');
+      test.skip('Theme persistence cannot be tested', () => {});
     }
   });
 
