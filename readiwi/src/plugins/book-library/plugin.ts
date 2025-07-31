@@ -59,20 +59,7 @@ export class BookLibraryPlugin implements Plugin {
   }
 
   registerRoutes(): RouteRegistry {
-    return {
-      '/': {
-        component: 'library.LibraryView',
-        title: 'Library - Readiwi',
-        description: 'Your personal book library',
-        requiresAuth: false,
-      },
-      '/library': {
-        component: 'library.LibraryView',
-        title: 'Library - Readiwi',
-        description: 'Your personal book library',
-        requiresAuth: false,
-      },
-    };
+    return {};
   }
 
   registerStores(): StoreRegistry {

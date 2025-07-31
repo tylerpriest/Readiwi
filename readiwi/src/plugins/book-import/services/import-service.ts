@@ -43,8 +43,6 @@ export interface ParsedBook {
 }
 
 class BookImportService {
-  private readonly MAX_RETRIES = 3;
-  private readonly RETRY_DELAY = 50; // Faster for testing
   private readonly REQUEST_DELAY = 10; // Faster for testing
   private progressCallbacks: Set<(progress: ImportProgress) => void> = new Set();
 
@@ -171,6 +169,11 @@ class BookImportService {
     
     for (let i = 0; i < bookData.chapterUrls.length; i++) {
       const chapterUrl = bookData.chapterUrls[i];
+      if (!chapterUrl) {
+        console.warn(`Skipping chapter ${i + 1}: no URL found`);
+        continue;
+      }
+      
       progress.currentChapter = `Chapter ${i + 1}`;
       progress.completedChapters = i;
       this.notifyProgress(progress);
@@ -267,7 +270,7 @@ class BookImportService {
       title,
       author,
       description,
-      coverUrl,
+      coverUrl: coverUrl || '',
       tags,
       status,
       language: 'en',
@@ -358,7 +361,7 @@ class BookImportService {
    * Enhanced mock book creation (fallback for development)
    * This is more realistic than the original mock and maintains the same interface
    */
-  private async createEnhancedMockBook(bookId: string, progress: ImportProgress, originalUrl: string): Promise<ParsedBook> {
+  private async createEnhancedMockBook(bookId: string, progress: ImportProgress, _originalUrl: string): Promise<ParsedBook> {
     // Simulate fetching book metadata (fast for testing)
     await this.delay(5);
     
@@ -473,7 +476,7 @@ class BookImportService {
   /**
    * Generate realistic chapter content
    */
-  private generateChapterContent(chapterNumber: number, bookTitle: string): string {
+  private generateChapterContent(chapterNumber: number, _bookTitle: string): string {
     const openings = [
       "The morning sun cast long shadows across the courtyard as",
       "Alex couldn't shake the feeling that something was different today.",
@@ -535,7 +538,7 @@ class BookImportService {
    */
   private extractRoyalRoadBookId(url: string): string | null {
     const match = url.match(/\/fiction\/(\d+)/);
-    return match ? match[1] : null;
+    return match?.[1] ?? null;
   }
 
   /**

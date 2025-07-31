@@ -51,7 +51,7 @@ class LibraryService {
         ...bookData,
         createdAt: new Date(),
         updatedAt: new Date(),
-        status: bookData.status || BookStatus.NOT_STARTED,
+        status: bookData.status || BookStatus.READY,
         isFavorite: bookData.isFavorite || false,
         tags: bookData.tags || [],
         totalChapters: bookData.totalChapters || 0,

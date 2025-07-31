@@ -158,12 +158,17 @@ export class BookRepository extends BaseRepository<Book> {
         return progress > 0 && progress < 100;
       }).length;
 
+      // Calculate average progress
+      const totalProgress = Array.from(progressByBook.values()).reduce((sum, progress) => sum + progress, 0);
+      const averageProgress = progressByBook.size > 0 ? totalProgress / progressByBook.size : 0;
+
       return {
         totalBooks: books.length,
         favoriteBooks: books.filter((book: Book) => book.isFavorite).length,
         completedBooks,
         inProgressBooks,
         totalChapters: books.reduce((sum: number, book: Book) => sum + book.totalChapters, 0),
+        averageProgress: Math.round(averageProgress * 100) / 100, // Round to 2 decimal places
       };
     } catch (error) {
       throw new Error(`Failed to get library stats: ${error}`);

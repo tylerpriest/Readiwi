@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/core/utils/cn';
 import { useSettingsStore } from '../stores/settings-store';
@@ -241,7 +241,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           <CardContent className="pt-4">
             <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300">
               <AlertCircle className="w-4 h-4" />
-              <span>You have unsaved changes. Don't forget to save!</span>
+              <span>You have unsaved changes. Don&#39;t forget to save!</span>
             </div>
           </CardContent>
         </Card>
