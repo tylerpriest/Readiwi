@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
 import { cn } from '@/core/utils/cn';
 import type { NavigationItemProps } from '@/plugins/navigation/types/navigation-types';
@@ -16,6 +17,8 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
   className,
   'data-testid': testId,
 }) => {
+  const router = useRouter();
+
   const handleClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     
@@ -24,15 +27,15 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
     if (item.action) {
       item.action();
     } else if (item.path && !item.external) {
-      // Handle internal navigation
-      window.history.pushState(null, '', item.path);
+      // Handle internal navigation with Next.js router
+      router.push(item.path);
     } else if (item.path && item.external) {
       // Handle external navigation
       window.open(item.path, '_blank', 'noopener,noreferrer');
     }
     
     onItemClick?.(item);
-  }, [item, onItemClick]);
+  }, [item, onItemClick, router]);
 
   const handleMouseEnter = useCallback(() => {
     if (!item.disabled) {
@@ -48,13 +51,13 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
   const paddingLeft = level * 16 + 16; // 16px per level + base padding
 
   const baseClasses = cn(
-    'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-all duration-200',
-    'hover:bg-gray-100 dark:hover:bg-gray-800',
-    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+    'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors duration-200',
+    'hover:bg-accent hover:text-accent-foreground',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     {
-      'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300': isActive,
-      'bg-gray-50 dark:bg-gray-800/50': isHovered && !isActive,
-      'text-gray-400 dark:text-gray-600 cursor-not-allowed': item.disabled,
+      'bg-primary text-primary-foreground': isActive,
+      'bg-muted': isHovered && !isActive,
+      'text-muted-foreground cursor-not-allowed opacity-50': item.disabled,
       'cursor-pointer': !item.disabled,
     }
   );
@@ -101,9 +104,8 @@ const NavigationItem: React.FC<NavigationItemProps> = ({
           {item.badge && (
             <span 
               className={cn(
-                'ml-auto px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700',
-                'dark:bg-gray-700 dark:text-gray-300',
-                isActive && 'bg-blue-200 text-blue-800 dark:bg-blue-800 dark:text-blue-200'
+                'ml-auto px-2 py-0.5 text-xs rounded-full bg-secondary text-secondary-foreground',
+                isActive && 'bg-primary-foreground text-primary'
               )}
               aria-label={`Badge: ${item.badge}`}
             >

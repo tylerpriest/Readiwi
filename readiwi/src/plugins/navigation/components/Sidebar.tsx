@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {/* Overlay backdrop for mobile */}
       {config.overlay && isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={close}
           aria-hidden="true"
         />
@@ -115,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div
         ref={sidebarRef}
         className={cn(
-          'flex flex-col bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800',
+          'flex flex-col bg-background border-border',
           'transition-all duration-300 ease-in-out',
           {
             // Position classes
@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             'border-l': position === 'right',
             
             // Overlay mode (mobile)
-            'fixed top-0 bottom-0 z-50 shadow-xl': config.overlay,
+            'fixed top-0 bottom-0 z-50 shadow-lg': config.overlay,
             'left-0': config.overlay && position === 'left',
             'right-0': config.overlay && position === 'right',
             
@@ -144,9 +144,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         aria-expanded={isOpen}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           {!isCollapsed && (
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h2 className="text-lg font-semibold text-foreground">
               Navigation
             </h2>
           )}
@@ -156,8 +156,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 className={cn(
-                  'p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500',
+                  'p-2 rounded-md hover:bg-accent hover:text-accent-foreground',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                   'transition-colors duration-200'
                 )}
                 onClick={handleToggleCollapse}
@@ -176,8 +176,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               <button
                 type="button"
                 className={cn(
-                  'p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800',
-                  'focus:outline-none focus:ring-2 focus:ring-blue-500',
+                  'p-2 rounded-md hover:bg-accent hover:text-accent-foreground',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                   'transition-colors duration-200'
                 )}
                 onClick={close}
@@ -193,7 +193,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {/* Navigation Content */}
         <div className="flex-1 overflow-y-auto p-4">
           {visibleSections.length === 0 ? (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <div className="text-center text-muted-foreground py-8">
               {isCollapsed ? (
                 <Menu className="w-6 h-6 mx-auto" />
               ) : (
@@ -221,8 +221,8 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer */}
         {!isCollapsed && (
-          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+          <div className="p-4 border-t border-border">
+            <div className="text-xs text-muted-foreground text-center">
               Navigation Plugin v1.0
             </div>
           </div>

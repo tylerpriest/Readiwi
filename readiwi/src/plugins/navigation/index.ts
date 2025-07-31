@@ -5,7 +5,8 @@ export { NavigationPlugin, navigationPlugin } from './plugin';
 export { 
   Sidebar, 
   NavigationSection, 
-  NavigationItem 
+  NavigationItem,
+  NavigationToggle
 } from './components';
 
 // Store export

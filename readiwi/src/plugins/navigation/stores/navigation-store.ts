@@ -9,13 +9,16 @@ import type {
   NavigationConfig 
 } from '@/plugins/navigation/types/navigation-types';
 
+// Mobile-first configuration
+const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
 const defaultConfig: NavigationConfig = {
   sections: [],
   width: 280,
   collapsible: true,
   defaultCollapsed: false,
   position: 'left',
-  overlay: false,
+  overlay: isMobile, // Mobile-first: overlay on mobile, static on desktop
 };
 
 const defaultSections: NavigationSection[] = [
@@ -33,7 +36,7 @@ const defaultSections: NavigationSection[] = [
         id: 'library',
         label: 'Library',
         icon: '📚',
-        path: '/library',
+        path: '/',
         badge: '5',
       },
       {
@@ -96,8 +99,8 @@ const defaultSections: NavigationSection[] = [
 export const useNavigationStore = create<NavigationStore>()(
   persist(
     (set, get) => ({
-      // State
-      isOpen: true,
+      // State - Mobile-first: closed on mobile, open on desktop
+      isOpen: !isMobile,
       isCollapsed: false,
       activeItem: null,
       hoveredItem: null,
@@ -229,13 +232,14 @@ export const useNavigationStore = create<NavigationStore>()(
       },
 
       reset: () => {
+        const isMobileNow = typeof window !== 'undefined' && window.innerWidth < 1024;
         set({
-          isOpen: true,
+          isOpen: !isMobileNow,
           isCollapsed: defaultConfig.defaultCollapsed || false,
           activeItem: null,
           hoveredItem: null,
           sections: defaultSections,
-          config: defaultConfig,
+          config: { ...defaultConfig, overlay: isMobileNow },
         });
       },
     }),

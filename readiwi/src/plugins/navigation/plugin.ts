@@ -1,6 +1,6 @@
 import { BasePlugin } from '@/core/utils/base-plugin';
 import { navigationService } from './services/navigation-service';
-import { Sidebar, NavigationSection, NavigationItem } from './components';
+import { Sidebar, NavigationSection, NavigationItem, NavigationToggle } from './components';
 
 export class NavigationPlugin extends BasePlugin {
   public readonly id = 'navigation';
@@ -57,6 +57,7 @@ export class NavigationPlugin extends BasePlugin {
       Sidebar, 
       NavigationSection,
       NavigationItem,
+      NavigationToggle,
     };
   }
 

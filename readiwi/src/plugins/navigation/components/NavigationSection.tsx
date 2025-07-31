@@ -41,9 +41,9 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
               type="button"
               className={cn(
                 'flex items-center justify-between w-full px-3 py-2 text-xs font-semibold',
-                'text-gray-500 dark:text-gray-400 uppercase tracking-wide',
-                'hover:text-gray-700 dark:hover:text-gray-200',
-                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
+                'text-muted-foreground uppercase tracking-wide',
+                'hover:text-foreground',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                 'rounded-md transition-colors duration-200'
               )}
               onClick={handleSectionToggle}
@@ -62,7 +62,7 @@ const NavigationSection: React.FC<NavigationSectionProps> = ({
           ) : (
             <h3
               className={cn(
-                'px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400',
+                'px-3 py-2 text-xs font-semibold text-muted-foreground',
                 'uppercase tracking-wide'
               )}
               id={`section-${section.id}`}
