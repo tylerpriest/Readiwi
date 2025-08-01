@@ -29,6 +29,8 @@ export interface ReadingSettings {
   scrollBehavior: 'smooth' | 'instant';
   autoBookmark: boolean;
   bookmarkInterval: number; // seconds
+  navigationMode: 'buttons' | 'infinite-scroll'; // Chapter navigation style
+  infiniteScrollThreshold: number; // Distance from bottom to trigger next chapter (px)
 }
 
 // Audio Settings
@@ -181,6 +183,8 @@ export const DEFAULT_READING_SETTINGS: ReadingSettings = {
   scrollBehavior: 'smooth',
   autoBookmark: true,
   bookmarkInterval: 30,
+  navigationMode: 'buttons',
+  infiniteScrollThreshold: 200,
 };
 
 export const DEFAULT_AUDIO_SETTINGS: AudioSettings = {

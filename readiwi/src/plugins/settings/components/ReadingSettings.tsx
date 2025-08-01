@@ -221,10 +221,37 @@ const ReadingSettings: React.FC<ReadingSettingsProps> = ({
         <CardHeader>
           <CardTitle>Reading Behavior</CardTitle>
           <CardDescription>
-            Configure animations, bookmarking, and interactions
+            Configure navigation, animations, bookmarking, and interactions
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Navigation Mode */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Chapter Navigation</label>
+            <div className="flex gap-2">
+              <Button
+                variant={reading.navigationMode === 'buttons' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleSettingChange('navigationMode', 'buttons')}
+                data-testid="nav-buttons"
+              >
+                Previous/Next Buttons
+              </Button>
+              <Button
+                variant={reading.navigationMode === 'infinite-scroll' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleSettingChange('navigationMode', 'infinite-scroll')}
+                data-testid="nav-infinite-scroll"
+              >
+                Infinite Scroll
+              </Button>
+            </div>
+            {reading.navigationMode === 'infinite-scroll' && (
+              <p className="text-xs text-muted-foreground">
+                Automatically loads next chapter when you scroll near the bottom
+              </p>
+            )}
+          </div>
           {/* Animations */}
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">

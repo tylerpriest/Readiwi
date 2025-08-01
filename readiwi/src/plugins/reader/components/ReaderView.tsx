@@ -9,6 +9,7 @@ import { useReaderStore } from '../stores/reader-store';
 // import { reliablePositionTracker } from '../services/position-tracker'; // TODO: Implement full position tracking
 import { readerService } from '../services/reader-service';
 import { useSettingsStore } from '@/plugins/settings/stores/settings-store';
+import ReadingSettings from '@/plugins/settings/components/ReadingSettings';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -154,6 +155,42 @@ const ReaderView: React.FC<ReaderViewProps> = ({
       console.warn('Position tracking error:', error);
     }
   }, [currentChapter, currentBook, updatePosition]);
+
+  // Auto-bookmark functionality
+  useEffect(() => {
+    if (!settings.reading.autoBookmark || !currentChapter || !currentBook) return;
+    
+    const interval = setInterval(() => {
+      handleContentInteraction(); // This saves position, acting as auto-bookmark
+    }, settings.reading.bookmarkInterval * 1000);
+
+    return () => clearInterval(interval);
+  }, [settings.reading.autoBookmark, settings.reading.bookmarkInterval, currentChapter, currentBook, handleContentInteraction]);
+
+  // Infinite scroll functionality
+  useEffect(() => {
+    if (settings.reading.navigationMode !== 'infinite-scroll' || !contentRef.current) return;
+
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      
+      const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+      
+      // Check if we're near the bottom
+      if (distanceFromBottom <= settings.reading.infiniteScrollThreshold) {
+        // Trigger next chapter load
+        handleNextChapter();
+      }
+    };
+
+    const contentElement = contentRef.current;
+    contentElement.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      contentElement.removeEventListener('scroll', handleScroll);
+    };
+  }, [settings.reading.navigationMode, settings.reading.infiniteScrollThreshold, handleNextChapter]);
 
   // Restore position when chapter changes
   useEffect(() => {
@@ -315,22 +352,21 @@ const ReaderView: React.FC<ReaderViewProps> = ({
       {/* Settings Panel */}
       {isSettingsVisible && (
         <div 
-          className="sticky top-[110px] z-10 bg-muted/50 border-b"
+          className="sticky top-[110px] z-10 bg-background/95 backdrop-blur-sm border-b shadow-sm"
           data-testid="reading-settings-panel"
         >
           <div className="container mx-auto px-4 py-3">
-            <p className="text-sm text-muted-foreground">
-              Reading settings panel (font size, theme, etc.)
-            </p>
+            <ReadingSettings />
           </div>
         </div>
       )}
 
       {/* Chapter Navigation */}
-      <div 
-        className="sticky top-[147px] z-10 bg-background/80 backdrop-blur border-b"
-        data-testid="chapter-navigation"
-      >
+      {settings.reading.navigationMode === 'buttons' && (
+        <div 
+          className="sticky top-[147px] z-10 bg-background/80 backdrop-blur border-b"
+          data-testid="chapter-navigation"
+        >
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <Button
@@ -372,7 +408,18 @@ const ReaderView: React.FC<ReaderViewProps> = ({
             </Button>
           </div>
         </div>
-      </div>
+        </div>
+      )}
+
+      {/* Infinite Scroll Indicator */}
+      {settings.reading.navigationMode === 'infinite-scroll' && (
+        <div 
+          className="fixed bottom-4 right-4 z-20 bg-primary/10 text-primary px-2 py-1 rounded text-xs"
+          data-testid="infinite-scroll-indicator"
+        >
+          Scroll for next chapter
+        </div>
+      )}
 
       {/* Position Indicator */}
       {currentPosition && (
@@ -385,11 +432,25 @@ const ReaderView: React.FC<ReaderViewProps> = ({
       )}
 
       {/* Reading Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main 
+        className={cn(
+          "container mx-auto px-4 py-8 transition-colors duration-200",
+          // Apply theme-specific classes
+          settings.reading.theme.mode === 'dark' && 'dark',
+          settings.reading.theme.mode === 'sepia' && 'sepia',
+          settings.reading.theme.mode === 'high-contrast' && 'high-contrast'
+        )}
+        style={{
+          backgroundColor: settings.reading.theme.backgroundColor,
+        }}
+      >
         {currentChapter ? (
           <article 
             ref={contentRef}
-            className="responsive-layout max-w-4xl mx-auto prose prose-lg dark:prose-invert"
+            className={cn(
+              "responsive-layout max-w-4xl mx-auto prose prose-lg dark:prose-invert",
+              settings.reading.animatePageTurns && "transition-all duration-300 ease-in-out"
+            )}
             style={{
               fontSize: `${settings.reading.theme.fontSize}px`,
               fontFamily: settings.reading.theme.fontFamily,
@@ -399,7 +460,12 @@ const ReaderView: React.FC<ReaderViewProps> = ({
               padding: `0 ${settings.reading.marginSize}px`,
               backgroundColor: settings.reading.theme.backgroundColor,
               color: settings.reading.theme.textColor,
-            }}
+              columnCount: settings.reading.columnsPerPage,
+              columnGap: settings.reading.columnsPerPage > 1 ? '2rem' : 'normal',
+              scrollBehavior: settings.reading.scrollBehavior,
+              // Apply paragraph spacing via CSS custom properties
+              '--paragraph-spacing': `${settings.reading.paragraphSpacing}px`,
+            } as React.CSSProperties}
             onClick={handleContentInteraction}
             onScroll={handleContentInteraction}
             data-testid="reading-content"
