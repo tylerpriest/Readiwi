@@ -74,6 +74,61 @@ const ReaderView: React.FC<ReaderViewProps> = ({
   // Get reading settings
   const { settings } = useSettingsStore();
 
+  // Custom chapter navigation functions that update URLs
+  const navigateToChapter = useCallback((targetChapterId: number, targetChapterSlug?: string) => {
+    if (!slug) return; // Need book slug for navigation
+    
+    // Generate chapter slug if not provided
+    const chapterSlugToUse = targetChapterSlug || `chapter-${targetChapterId}`;
+    
+    // Navigate to chapter URL
+    const chapterUrl = `/read/${bookId}/${slug}/${targetChapterId}/${chapterSlugToUse}`;
+    console.log(`Navigating to chapter: ${chapterUrl}`);
+    router.push(chapterUrl);
+  }, [bookId, slug, router]);
+
+  const handleNextChapter = useCallback(async () => {
+    if (!currentChapter || !currentBook) return;
+    
+    // Find current chapter index
+    const chapters = currentBook.chapters || [];
+    const currentIndex = chapters.findIndex(c => c.id === currentChapter.id);
+    
+    if (currentIndex < chapters.length - 1) {
+      const nextChapterData = chapters[currentIndex + 1];
+      if (nextChapterData) {
+        // Generate chapter slug from title
+        const nextChapterSlug = nextChapterData.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '') || `chapter-${nextChapterData.id}`;
+          
+        navigateToChapter(nextChapterData.id, nextChapterSlug);
+      }
+    }
+  }, [currentChapter, currentBook, navigateToChapter]);
+
+  const handlePreviousChapter = useCallback(async () => {
+    if (!currentChapter || !currentBook) return;
+    
+    // Find current chapter index  
+    const chapters = currentBook.chapters || [];
+    const currentIndex = chapters.findIndex(c => c.id === currentChapter.id);
+    
+    if (currentIndex > 0) {
+      const prevChapterData = chapters[currentIndex - 1];
+      if (prevChapterData) {
+        // Generate chapter slug from title
+        const prevChapterSlug = prevChapterData.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '') || `chapter-${prevChapterData.id}`;
+          
+        navigateToChapter(prevChapterData.id, prevChapterSlug);
+      }
+    }
+  }, [currentChapter, currentBook, navigateToChapter]);
+
   // Handle position tracking on content interaction
   const handleContentInteraction = useCallback(async () => {
     if (!currentChapter || !contentRef.current || !currentBook) return;
