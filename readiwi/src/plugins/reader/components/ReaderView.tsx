@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/core/utils/cn';
 import { useReaderStore } from '../stores/reader-store';
-// import { reliablePositionTracker } from '../services/position-tracker'; // TODO: Use for position tracking
+// import { reliablePositionTracker } from '../services/position-tracker'; // TODO: Implement full position tracking
+import { readerService } from '../services/reader-service';
+import { useSettingsStore } from '@/plugins/settings/stores/settings-store';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -18,19 +20,25 @@ import AudioControls from '@/plugins/audio/components/AudioControls';
 
 interface ReaderViewProps {
   bookId: number; // @description ID of the book to read
+  slug?: string; // @description URL slug of the book (optional, for URL validation)
   className?: string; // @description Additional CSS classes
   'data-testid'?: string; // @description Test identifier for testing
 }
 
 const ReaderView: React.FC<ReaderViewProps> = ({
   bookId, // TODO: Use to load specific book
+  slug, // TODO: Use for URL validation
   className,
   'data-testid': testId,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   
-  // TODO: Use bookId to load specific book data
-  console.log('Reader loading for book:', bookId);
+  // Log slug for debugging (TODO: Use for URL validation)
+  React.useEffect(() => {
+    if (slug) {
+      console.log(`Reader loaded for book ${bookId} with slug: ${slug}`);
+    }
+  }, [bookId, slug]);
   
   // Store subscriptions
   const {
@@ -42,20 +50,34 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     isSettingsVisible,
     nextChapter,
     previousChapter,
+    loadBook,
     updatePosition,
     toggleSettings,
     clearError,
     reset,
   } = useReaderStore();
+  
+  // Load book when component mounts or bookId changes
+  useEffect(() => {
+    if (bookId) {
+      console.log('Loading book:', bookId);
+      loadBook(bookId);
+    }
+  }, [bookId, loadBook]);
+  
+  // Get reading settings
+  const { settings } = useSettingsStore();
 
   // Handle position tracking on content interaction
   const handleContentInteraction = useCallback(async () => {
-    if (!currentChapter || !contentRef.current) return;
+    if (!currentChapter || !contentRef.current || !currentBook) return;
     
     try {
       const element = contentRef.current;
       const scrollPosition = element.scrollTop;
-      const characterOffset = 0; // Would calculate based on visible text in real implementation
+      
+      // Use scroll position as character offset for now (simplified approach)
+      const characterOffset = Math.floor(scrollPosition);
       
       const newPosition = {
         chapterId: currentChapter.id,
@@ -65,10 +87,13 @@ const ReaderView: React.FC<ReaderViewProps> = ({
       };
       
       updatePosition(newPosition);
+      
+      // Also save to database via reader service
+      await readerService.saveReadingPosition(currentBook.id!, newPosition);
     } catch (error) {
       console.warn('Position tracking error:', error);
     }
-  }, [currentChapter, updatePosition]);
+  }, [currentChapter, currentBook, updatePosition]);
 
   // Restore position when chapter changes
   useEffect(() => {
@@ -86,6 +111,28 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     
     restorePosition();
   }, [currentChapter, currentPosition]);
+
+  // Add scroll listener for position tracking
+  useEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
+
+    let scrollTimeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      // Debounce scroll events to avoid excessive position updates
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        handleContentInteraction();
+      }, 500);
+    };
+
+    element.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      element.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [handleContentInteraction]);
 
   // Handle retry action
   const handleRetry = useCallback(() => {
@@ -283,6 +330,16 @@ const ReaderView: React.FC<ReaderViewProps> = ({
           <article 
             ref={contentRef}
             className="responsive-layout max-w-4xl mx-auto prose prose-lg dark:prose-invert"
+            style={{
+              fontSize: `${settings.reading.theme.fontSize}px`,
+              fontFamily: settings.reading.theme.fontFamily,
+              lineHeight: settings.reading.theme.lineHeight,
+              textAlign: settings.reading.textAlign,
+              maxWidth: `${settings.reading.pageWidth}px`,
+              padding: `0 ${settings.reading.marginSize}px`,
+              backgroundColor: settings.reading.theme.backgroundColor,
+              color: settings.reading.theme.textColor,
+            }}
             onClick={handleContentInteraction}
             onScroll={handleContentInteraction}
             data-testid="reading-content"

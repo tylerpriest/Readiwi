@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/core/utils/cn';
@@ -18,8 +19,12 @@ const LibraryView: React.FC<LibraryViewProps> = ({
   'data-testid': testId,
   ...props
 }) => {
+  // 1. Router hook
+  const router = useRouter();
+
   // 2. Store subscriptions
   const {
+    books,
     filteredBooks,
     loading,
     error,
@@ -67,12 +72,22 @@ const LibraryView: React.FC<LibraryViewProps> = ({
 
   const handleBookRead = useCallback((id: number) => {
     try {
-      // Navigate to reader for this book
-      window.location.href = `/read/${id}`;
+      // Find the book to get its slug
+      const book = books.find((b: any) => b.id === id);
+      if (!book) {
+        console.error(`Book with ID ${id} not found`);
+        return;
+      }
+      
+      // Use slug if available, otherwise fallback to a generated slug
+      const slug = book.urlSlug || book.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      
+      // Navigate to reader with slug format: /read/[bookId]/[slug]
+      router.push(`/read/${id}/${slug}`);
     } catch (error) {
       console.error('Failed to open book for reading:', error);
     }
-  }, []);
+  }, [router, books]);
 
   const handleBookFavorite = useCallback((id: number) => {
     try {
@@ -94,12 +109,11 @@ const LibraryView: React.FC<LibraryViewProps> = ({
 
   const handleAddBook = useCallback(() => {
     try {
-      // TODO: Show add book dialog
-      console.log('Add new book');
+      router.push('/import');
     } catch (error) {
-      console.error('Failed to show add book dialog:', error);
+      console.error('Failed to navigate to import page:', error);
     }
-  }, []);
+  }, [router]);
 
   const handleClearError = useCallback(() => {
     try {
@@ -111,11 +125,9 @@ const LibraryView: React.FC<LibraryViewProps> = ({
 
   // 4. Effects
   useEffect(() => {
-    // Load books on component mount if not already loaded
-    if (!hasBooks && !loading) {
-      handleLoadBooks();
-    }
-  }, [hasBooks, loading, handleLoadBooks]);
+    // Always load books on component mount to ensure fresh data
+    handleLoadBooks();
+  }, [handleLoadBooks]);
 
   // 5. Render with accessibility and performance optimization
   return (
