@@ -47,12 +47,13 @@ const ReaderView: React.FC<ReaderViewProps> = ({
   const {
     currentBook,
     currentChapter,
+    chapters,
     currentPosition,
     loading,
     error,
     isSettingsVisible,
-    nextChapter,
-    previousChapter,
+    // nextChapter, // Using custom handleNextChapter instead
+    // previousChapter, // Using custom handlePreviousChapter instead
     loadBook,
     updatePosition,
     toggleSettings,
@@ -88,11 +89,10 @@ const ReaderView: React.FC<ReaderViewProps> = ({
   }, [bookId, slug, router]);
 
   const handleNextChapter = useCallback(async () => {
-    if (!currentChapter || !currentBook) return;
+    if (!currentChapter || !chapters) return;
     
-    // Find current chapter index
-    const chapters = currentBook.chapters || [];
-    const currentIndex = chapters.findIndex(c => c.id === currentChapter.id);
+    // Find current chapter index  
+    const currentIndex = chapters.findIndex((c: any) => c.id === currentChapter.id);
     
     if (currentIndex < chapters.length - 1) {
       const nextChapterData = chapters[currentIndex + 1];
@@ -106,14 +106,13 @@ const ReaderView: React.FC<ReaderViewProps> = ({
         navigateToChapter(nextChapterData.id, nextChapterSlug);
       }
     }
-  }, [currentChapter, currentBook, navigateToChapter]);
+  }, [currentChapter, chapters, navigateToChapter]);
 
   const handlePreviousChapter = useCallback(async () => {
-    if (!currentChapter || !currentBook) return;
+    if (!currentChapter || !chapters) return;
     
     // Find current chapter index  
-    const chapters = currentBook.chapters || [];
-    const currentIndex = chapters.findIndex(c => c.id === currentChapter.id);
+    const currentIndex = chapters.findIndex((c: any) => c.id === currentChapter.id);
     
     if (currentIndex > 0) {
       const prevChapterData = chapters[currentIndex - 1];
@@ -127,7 +126,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
         navigateToChapter(prevChapterData.id, prevChapterSlug);
       }
     }
-  }, [currentChapter, currentBook, navigateToChapter]);
+  }, [currentChapter, chapters, navigateToChapter]);
 
   // Handle position tracking on content interaction
   const handleContentInteraction = useCallback(async () => {
@@ -337,7 +336,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={previousChapter}
+              onClick={handlePreviousChapter}
               disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
             >
@@ -362,7 +361,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={nextChapter}
+              onClick={handleNextChapter}
               disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
               aria-label="Next chapter"
@@ -437,7 +436,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
           <div className="flex justify-between items-center">
             <Button
               variant="outline"
-              onClick={previousChapter}
+              onClick={handlePreviousChapter}
               disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
             >
@@ -453,7 +452,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
 
             <Button
               variant="outline"
-              onClick={nextChapter}
+              onClick={handleNextChapter}
               disabled={!currentBook || currentBook.totalChapters === 0}
               className="flex items-center space-x-1"
               aria-label="Next chapter bottom"
