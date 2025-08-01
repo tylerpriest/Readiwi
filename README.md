@@ -15,6 +15,11 @@
 readiwi/
 ├── src/
 │   ├── app/                    # Next.js 15 App Router
+│   │   └── read/               # Chapter-level URL routing
+│   │       ├── [bookId]/                                    # /read/1 → redirect  
+│   │       ├── [bookId]/[slug]/                            # /read/1/book-title → redirect
+│   │       ├── [bookId]/[slug]/[chapterId]/                # /read/1/book-title/5 → redirect
+│   │       └── [bookId]/[slug]/[chapterId]/[chapterSlug]/  # /read/1/book-title/5/chapter-5
 │   ├── core/                   # Base system components
 │   │   ├── components/         # UI foundation (Button, Card, etc.)
 │   │   ├── services/           # Database & core services

@@ -264,6 +264,11 @@ export class DatabaseService {
 ```
 src/
 ├── app/              # Next.js App Router
+│   └── read/         # Reading routes with chapter-level URLs
+│       ├── [bookId]/                                    # Fallback: redirect to book slug
+│       ├── [bookId]/[slug]/                            # Fallback: redirect to first chapter  
+│       ├── [bookId]/[slug]/[chapterId]/                # Fallback: redirect with chapter slug
+│       └── [bookId]/[slug]/[chapterId]/[chapterSlug]/  # Full chapter URL (final)
 ├── core/             # Core system (always enabled)
 │   ├── components/   # Base UI components
 │   ├── stores/       # Core state
@@ -274,7 +279,7 @@ src/
     ├── authentication/
     ├── book-library/
     ├── reader/
-    ├── settings/     # MISSING - implement first
+    ├── settings/     # COMPLETE - fully implemented
     └── [feature]/
 ```
 
