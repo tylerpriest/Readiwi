@@ -13,7 +13,7 @@ import {
   ImageCacheEntry,
 } from '@/core/types/database';
 
-export const DATABASE_VERSION = 4;
+export const DATABASE_VERSION = 7;
 export const DATABASE_NAME = 'ReadiwiDatabase';
 
 export const STORAGE_LIMITS = {
@@ -52,8 +52,8 @@ export class ReadiwiDatabase extends Dexie {
     // @ts-ignore - Progressive development, Dexie version method
     this.version(1).stores({
       books: '++id, title, author, sourceUrl, status, createdAt, updatedAt, lastReadAt',
-      chapters: '++id, bookId, index, title, wordCount, createdAt',
-      readingProgress: '++id, bookId, chapterId, position, percentage, timestamp',
+      chapters: '++id, bookId, index, title, content, chapterNumber, wordCount, estimatedReadingTime, createdAt, updatedAt, [bookId+index]',
+      readingProgress: '++id, bookId, chapterId, textPosition, scrollPosition, timestamp, createdAt, updatedAt',
       userSettings: '++id, key, value, updatedAt',
     });
     
@@ -76,6 +76,18 @@ export class ReadiwiDatabase extends Dexie {
     this.version(4).stores({
       parserCache: '++id, url, data, expiresAt, createdAt',
       imageCache: '++id, url, blob, size, expiresAt, createdAt',
+    });
+    
+    // Version 5: Add urlSlug field to books for better duplicate detection
+    // @ts-ignore - Progressive development, Dexie version method
+    this.version(5).stores({
+      books: '++id, title, author, sourceUrl, urlSlug, status, createdAt, updatedAt, lastReadAt',
+    });
+    
+    // Version 6: Fix chapters table with proper compound index for bookId+index queries
+    // @ts-ignore - Progressive development, Dexie version method
+    this.version(6).stores({
+      chapters: '++id, bookId, index, title, content, chapterNumber, wordCount, estimatedReadingTime, createdAt, updatedAt, [bookId+index]',
     });
   }
 

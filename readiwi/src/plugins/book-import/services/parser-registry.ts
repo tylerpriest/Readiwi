@@ -111,7 +111,7 @@ export class ParserRegistryService {
     const parser = this.findParserForUrl(url);
     
     if (!parser) {
-      throw new Error(`No parser available for URL: ${url}`);
+      throw new Error(`Unsupported source URL: ${url}`);
     }
     
     console.log(`Using parser: ${parser.config.name} for ${url}`);
@@ -151,7 +151,7 @@ export class ParserRegistryService {
   updateParserSettings(settings: { [parserId: string]: boolean }): void {
     // Only update settings for registered parsers
     Object.keys(settings).forEach(parserId => {
-      if (this.parsers[parserId]) {
+      if (this.parsers[parserId] && typeof settings[parserId] === 'boolean') {
         this.settings[parserId] = settings[parserId];
       }
     });

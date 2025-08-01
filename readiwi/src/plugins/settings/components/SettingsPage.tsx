@@ -18,6 +18,7 @@ import ImportSettings from './ImportSettings';
 import PrivacySettings from './PrivacySettings';
 import AccessibilitySettings from './AccessibilitySettings';
 import KeyboardSettings from './KeyboardSettings';
+import NavigationSettings from './NavigationSettings';
 
 interface SettingsPageProps {
   className?: string;
@@ -42,7 +43,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     validateSettings,
   } = useSettingsStore();
 
-  const [activeTab, setActiveTab] = useState('reading');
+  const [activeTab, setActiveTab] = useState('navigation');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Load settings on mount
@@ -255,7 +256,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="navigation" data-testid="navigation-tab">
+            Navigation
+          </TabsTrigger>
           <TabsTrigger value="reading" data-testid="reading-tab">
             Reading
           </TabsTrigger>
@@ -275,6 +279,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             Keyboard
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="navigation" className="space-y-4">
+          <NavigationSettings />
+        </TabsContent>
 
         <TabsContent value="reading" className="space-y-4">
           <ReadingSettings />

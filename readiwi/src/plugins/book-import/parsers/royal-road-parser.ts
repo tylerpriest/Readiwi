@@ -17,7 +17,7 @@ export class RoyalRoadParser extends BaseParser {
       requestsPerMinute: 30,
       delayBetweenRequests: 2000 // 2 seconds between requests
     },
-    corsProxy: 'https://api.allorigins.win/raw?url=',
+    corsProxy: 'https://corsproxy.io/?',
     userAgent: 'Readiwi/4.0 Book Reader'
   };
   
@@ -57,7 +57,8 @@ export class RoyalRoadParser extends BaseParser {
       '.status .label'
     ],
     chapterLinks: [
-      '#chapters a[href*="/chapter/"]',
+      'table#chapters td a[href*="/chapter/"]',
+      '#chapters td a[href*="/chapter/"]',
       '.chapter-row a[href*="/chapter/"]',
       'a[href*="/chapter/"]'
     ],
@@ -70,10 +71,11 @@ export class RoyalRoadParser extends BaseParser {
       'h1'
     ],
     chapterContent: [
-      '.chapter-content',
+      '.chapter-inner',
+      '.portlet-body .chapter-inner',
       '.portlet-body',
       '.page-content-wrapper',
-      '.chapter-inner'
+      '.chapter-content'
     ],
     
     // Elements to remove (WebToEpub inspired)
@@ -119,11 +121,20 @@ export class RoyalRoadParser extends BaseParser {
   protected parseBookMetadata(html: string): ParsedBookMetadata {
     const doc = this.parseHtml(html);
     
-    // Extract title
-    const title = this.extractTextBySelectors(doc, this.selectors.title) || 'Unknown Title';
+    // Clean up the document first (WebToEpub approach)
+    this.preprocessRawDom(doc as any);
     
-    // Extract author
-    const author = this.extractTextBySelectors(doc, this.selectors.author) || 'Unknown Author';
+    // Extract title - WebToEpub uses div.fic-header div.col h1
+    const title = this.extractTextBySelectors(doc, [
+      'div.fic-header div.col h1',
+      ...this.selectors.title
+    ]) || 'Unknown Title';
+    
+    // Extract author - WebToEpub uses div.fic-header h4 span a
+    const author = this.extractTextBySelectors(doc, [
+      'div.fic-header h4 span a',
+      ...this.selectors.author
+    ]) || 'Unknown Author';
     
     // Extract description
     const description = this.extractTextBySelectors(doc, this.selectors.description) || 'No description available.';
@@ -164,6 +175,14 @@ export class RoyalRoadParser extends BaseParser {
   }
   
   protected parseChapterUrls(html: string): string[] {
+    // First try to extract from JavaScript window.chapters array (modern Royal Road)
+    const jsChapters = this.extractChaptersFromJavaScript(html);
+    if (jsChapters.length > 0) {
+      console.log(`Found ${jsChapters.length} chapters from JavaScript`);
+      return jsChapters;
+    }
+    
+    // Fallback to HTML parsing (older approach)
     const doc = this.parseHtml(html);
     
     // Try different selectors for chapter links
@@ -179,12 +198,62 @@ export class RoyalRoadParser extends BaseParser {
     }
     
     const chapterUrls = Array.from(chapterLinks).map(link => {
-      const href = (link as HTMLAnchorElement).href || (link as HTMLAnchorElement).getAttribute('href');
+      // Always use getAttribute to avoid CORS proxy URL resolution issues
+      const href = (link as HTMLAnchorElement).getAttribute('href');
       if (!href) return null;
-      return href.startsWith('http') ? href : `https://www.royalroad.com${href}`;
+      
+      // Ensure we build the correct Royal Road URL
+      if (href.startsWith('http')) {
+        return href;
+      } else if (href.startsWith('/')) {
+        return `https://www.royalroad.com${href}`;
+      } else {
+        return `https://www.royalroad.com/${href}`;
+      }
     }).filter(Boolean) as string[];
     
+    console.log(`Found ${chapterUrls.length} chapters from HTML parsing`);
     return chapterUrls;
+  }
+  
+  /**
+   * Extract chapter URLs from JavaScript window.chapters array
+   */
+  private extractChaptersFromJavaScript(html: string): string[] {
+    try {
+      // Look for window.chapters = [...] in the HTML
+      const chaptersMatch = html.match(/window\.chapters\s*=\s*(\[.*?\]);/s);
+      if (!chaptersMatch) {
+        console.log('No window.chapters found in JavaScript');
+        return [];
+      }
+      
+      // Parse the JavaScript array safely
+      const chaptersJson = chaptersMatch[1];
+      if (!chaptersJson) {
+        console.warn('Empty chapters JSON');
+        return [];
+      }
+      const chapters = JSON.parse(chaptersJson);
+      
+      if (!Array.isArray(chapters)) {
+        console.warn('window.chapters is not an array');
+        return [];
+      }
+      
+      // Extract URLs from chapter objects
+      const chapterUrls = chapters
+        .filter(chapter => chapter && chapter.url) // Only chapters with URLs
+        .map(chapter => {
+          const url = chapter.url;
+          return url.startsWith('http') ? url : `https://www.royalroad.com${url}`;
+        });
+      
+      return chapterUrls;
+    } catch (error) {
+      console.warn('Failed to parse window.chapters:', error);
+      return [];
+    }
   }
   
   protected parseChapter(html: string, chapterNumber: number, url: string): ParsedChapter {
@@ -243,5 +312,57 @@ export class RoyalRoadParser extends BaseParser {
   
   private calculateWordCount(text: string): number {
     return text.split(/\s+/).filter(word => word.length > 0).length;
+  }
+  
+  /**
+   * Preprocess DOM to clean up Royal Road specific issues (WebToEpub approach)
+   */
+  private preprocessRawDom(doc: Document): void {
+    // Remove watermarks (hidden paragraphs)
+    this.removeWatermarks(doc);
+    
+    // Remove images with no src
+    this.removeImgTagsWithNoSrc(doc);
+    
+    // Remove random CSS classes that Royal Road generates
+    this.removeRandomCssClasses(doc);
+    
+    // Make hidden elements visible
+    this.makeHiddenElementsVisible(doc);
+  }
+  
+  private removeWatermarks(doc: Document): void {
+    // Remove hidden paragraphs that are often watermarks
+    const hiddenPs = doc.querySelectorAll('p[style*="display: none"], p[style*="display:none"]');
+    hiddenPs.forEach(p => p.remove());
+  }
+  
+  private removeImgTagsWithNoSrc(doc: Document): void {
+    const imgsWithoutSrc = doc.querySelectorAll('img:not([src]), img[src=""]');
+    imgsWithoutSrc.forEach(img => img.remove());
+  }
+  
+  private removeRandomCssClasses(doc: Document): void {
+    // Royal Road generates random CSS class names like "cnA1B2C3..."
+    const randomClassRegex = /^cn[A-Z][a-zA-Z0-9]{41}$/;
+    
+    doc.querySelectorAll('p').forEach(element => {
+      const classList = Array.from(element.classList);
+      const randomClasses = classList.filter(className => randomClassRegex.test(className));
+      
+      randomClasses.forEach(className => {
+        element.classList.remove(className);
+      });
+    });
+  }
+  
+  private makeHiddenElementsVisible(doc: Document): void {
+    // Remove display:none that might hide content
+    const hiddenElements = doc.querySelectorAll('[style*="display: none"], [style*="display:none"]');
+    hiddenElements.forEach(element => {
+      if (element instanceof HTMLElement) {
+        element.style.display = '';
+      }
+    });
   }
 }

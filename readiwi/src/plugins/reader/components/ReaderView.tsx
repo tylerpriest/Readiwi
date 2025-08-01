@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/core/utils/cn';
@@ -21,6 +22,8 @@ import AudioControls from '@/plugins/audio/components/AudioControls';
 interface ReaderViewProps {
   bookId: number; // @description ID of the book to read
   slug?: string; // @description URL slug of the book (optional, for URL validation)
+  chapterId?: number; // @description ID of the specific chapter to read (optional)
+  chapterSlug?: string; // @description URL slug of the chapter (optional, for URL validation)
   className?: string; // @description Additional CSS classes
   'data-testid'?: string; // @description Test identifier for testing
 }
@@ -28,17 +31,17 @@ interface ReaderViewProps {
 const ReaderView: React.FC<ReaderViewProps> = ({
   bookId, // TODO: Use to load specific book
   slug, // TODO: Use for URL validation
+  chapterId, // TODO: Use to load specific chapter
+  chapterSlug, // TODO: Use for chapter URL validation
   className,
   'data-testid': testId,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   
-  // Log slug for debugging (TODO: Use for URL validation)
+  // Log URL parameters for debugging (TODO: Use for URL validation and chapter loading)
   React.useEffect(() => {
-    if (slug) {
-      console.log(`Reader loaded for book ${bookId} with slug: ${slug}`);
-    }
-  }, [bookId, slug]);
+    console.log(`Reader loaded for book ${bookId}${slug ? ` (${slug})` : ''}${chapterId ? `, chapter ${chapterId}` : ''}${chapterSlug ? ` (${chapterSlug})` : ''}`);
+  }, [bookId, slug, chapterId, chapterSlug]);
   
   // Store subscriptions
   const {
@@ -56,6 +59,9 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     clearError,
     reset,
   } = useReaderStore();
+  
+  // Router for URL navigation
+  const router = useRouter();
   
   // Load book when component mounts or bookId changes
   useEffect(() => {

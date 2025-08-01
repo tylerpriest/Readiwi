@@ -38,6 +38,7 @@ export interface ParserProgress {
   title?: string;
   author?: string;
   error?: string;
+  estimatedTimeRemaining?: number;
 }
 
 export interface ParserConfig {
@@ -79,14 +80,18 @@ export abstract class BaseParser {
   protected progressCallback?: (progress: ParserProgress) => void;
   private lastRequestTime: number = 0;
   
+  private _validated = false;
+  
   constructor() {
-    this.validateConfig();
+    // Config validation will happen on first use
   }
   
   abstract canParse(url: string): boolean;
   abstract extractBookId(url: string): string | null;
   
   async parseBook(url: string, progressCallback?: (progress: ParserProgress) => void): Promise<ParsedBook> {
+    this.ensureValidated();
+    
     if (progressCallback) {
       this.progressCallback = progressCallback;
     }
@@ -179,23 +184,59 @@ export abstract class BaseParser {
       await this.delay(waitTime);
     }
     
-    // Construct URL with CORS proxy if needed
-    const fetchUrl = this.config.corsProxy ? 
-      `${this.config.corsProxy}${encodeURIComponent(url)}` : url;
+    // CORS proxy fallbacks
+    const corsProxies = [
+      'https://corsproxy.io/?',
+      'https://cors-anywhere.herokuapp.com/',
+      'https://api.allorigins.win/raw?url=',
+      'https://cors.bridged.cc/',
+    ];
     
-    // Make request
-    const response = await fetch(fetchUrl, {
-      headers: {
-        'User-Agent': this.config.userAgent || 'Readiwi/4.0'
+    let lastError: Error | null = null;
+    
+    // Try direct fetch first (might work in some environments)
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': this.config.userAgent || 'Readiwi/4.0'
+        }
+      });
+      
+      if (response.ok) {
+        this.lastRequestTime = Date.now();
+        return await response.text();
       }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } catch (error) {
+      // Direct fetch failed, try proxies
+      console.log(`Direct fetch failed for ${url}, trying CORS proxies...`);
     }
     
-    this.lastRequestTime = Date.now();
-    return await response.text();
+    // Try each CORS proxy
+    for (const proxy of corsProxies) {
+      try {
+        const fetchUrl = `${proxy}${encodeURIComponent(url)}`;
+        console.log(`Trying CORS proxy: ${proxy}`);
+        
+        const response = await fetch(fetchUrl, {
+          headers: {
+            'User-Agent': this.config.userAgent || 'Readiwi/4.0'
+          }
+        });
+        
+        if (response.ok) {
+          console.log(`Success with proxy: ${proxy}`);
+          this.lastRequestTime = Date.now();
+          return await response.text();
+        } else {
+          console.warn(`Proxy ${proxy} returned ${response.status}: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.warn(`Proxy ${proxy} failed:`, error);
+        lastError = error as Error;
+      }
+    }
+    
+    throw new Error(`All CORS proxies failed. Last error: ${lastError?.message || 'Unknown error'}`);
   }
   
   protected parseHtml(html: string): Document {
@@ -254,6 +295,13 @@ export abstract class BaseParser {
   
   protected delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+  private ensureValidated(): void {
+    if (!this._validated) {
+      this.validateConfig();
+      this._validated = true;
+    }
   }
   
   private validateConfig(): void {

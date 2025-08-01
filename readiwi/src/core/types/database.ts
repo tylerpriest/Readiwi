@@ -6,6 +6,7 @@ export interface Book {
   coverUrl?: string;
   sourceUrl?: string;
   sourceSite?: string;
+  urlSlug?: string; // URL-based identifier (e.g., "just-add-mana")
   totalChapters: number;
   tags: string[];
   status: BookStatus;

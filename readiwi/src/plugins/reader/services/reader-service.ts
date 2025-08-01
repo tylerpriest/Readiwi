@@ -13,7 +13,7 @@ export class ReaderService {
         .equals(bookId)
         .sortBy('index');
       
-      return chapters.map(this.mapChapterFromDatabase);
+      return chapters.map((chapter: any) => this.mapChapterFromDatabase(chapter));
     } catch (error) {
       console.error('Failed to load book chapters:', error);
       throw new Error(`Failed to load chapters for book ${bookId}`);
@@ -44,10 +44,13 @@ export class ReaderService {
    */
   async getChapterByNumber(bookId: number, chapterNumber: number): Promise<Chapter | null> {
     try {
+      // Convert chapterNumber to 0-based index for database query
+      const chapterIndex = chapterNumber - 1;
+      
       // @ts-ignore - Progressive development approach
       const chapter = await db.chapters
         .where(['bookId', 'index'])
-        .equals([bookId, chapterNumber])
+        .equals([bookId, chapterIndex])
         .first();
       
       if (!chapter) {
@@ -152,6 +155,36 @@ export class ReaderService {
       createdAt: dbChapter.createdAt,
       updatedAt: dbChapter.updatedAt,
     };
+  }
+
+  /**
+   * Save imported chapters to database
+   */
+  async saveChapters(bookId: number, chapters: { title: string; content: string; chapterNumber: number; }[]): Promise<void> {
+    try {
+      const dbChapters = chapters.map(chapter => {
+        const { wordCount, estimatedReadingTime } = this.parseChapterContent(chapter.content);
+        
+        return {
+          bookId,
+          title: chapter.title,
+          content: chapter.content,
+          index: chapter.chapterNumber - 1, // Database uses 0-based index
+          chapterNumber: chapter.chapterNumber,
+          wordCount,
+          estimatedReadingTime,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      });
+
+      // @ts-ignore - Progressive development approach
+      await db.chapters.bulkAdd(dbChapters);
+      console.log(`Saved ${chapters.length} chapters for book ${bookId}`);
+    } catch (error) {
+      console.error('Failed to save imported chapters:', error);
+      throw new Error(`Failed to save chapters for book ${bookId}: ${error}`);
+    }
   }
 
   /**

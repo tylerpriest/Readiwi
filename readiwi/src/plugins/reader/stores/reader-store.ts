@@ -29,7 +29,6 @@ export const useReaderStore = create<ReaderState>()(
         
         try {
           // Load book details
-          // @ts-ignore - Progressive development approach
           const book = await libraryService.getBook(bookId);
           if (!book) {
             throw new Error('Book not found');
@@ -38,11 +37,18 @@ export const useReaderStore = create<ReaderState>()(
           // Load chapters
           const chapters = await readerService.getBookChapters(bookId);
           if (chapters.length === 0) {
-            // Create mock chapters for development
-            await readerService.createMockChapters(bookId, 5);
-            const newChapters = await readerService.getBookChapters(bookId);
-            set({ chapters: newChapters });
+            console.warn(`No chapters found for book ${bookId}. This might be an import that didn't save chapters properly.`);
+            // Only create mock chapters if explicitly in development mode
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Creating mock chapters for development...');
+              await readerService.createMockChapters(bookId, 5);
+              const newChapters = await readerService.getBookChapters(bookId);
+              set({ chapters: newChapters });
+            } else {
+              set({ chapters: [] });
+            }
           } else {
+            console.log(`Loaded ${chapters.length} chapters for book ${bookId}`);
             set({ chapters });
           }
           

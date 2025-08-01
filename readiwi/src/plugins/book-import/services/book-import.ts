@@ -47,12 +47,22 @@ export function isUrlSupported(url: string): boolean {
 }
 
 /**
- * Validate a URL format
+ * Validate a URL format and detect source
  */
-export function validateUrl(url: string): { valid: boolean; error?: string } {
+export function validateUrl(url: string): { valid: boolean; error?: string; source?: string } {
   try {
     new URL(url);
-    return { valid: true };
+    
+    // Check if URL is supported and get source
+    if (parserRegistry.isUrlSupported(url)) {
+      const parser = parserRegistry.findParserForUrl(url);
+      if (parser?.id) {
+        return { valid: true, source: parser.id };
+      }
+      return { valid: true };
+    }
+    
+    return { valid: false, error: 'Unsupported source URL' };
   } catch {
     return { valid: false, error: 'Invalid URL format' };
   }
@@ -84,6 +94,28 @@ export function updateParserSettings(settings: { [parserId: string]: boolean }):
  */
 export async function testParser(parserId: string, testUrl: string) {
   return await parserRegistry.testParser(parserId, testUrl);
+}
+
+/**
+ * Get import statistics for UI display
+ */
+export function getImportStats() {
+  const parserStats = parserRegistry.getParserStats();
+  const supportedSources = parserStats.filter(p => p.enabled).length;
+  
+  return {
+    supportedSources,
+    totalSources: parserStats.length,
+    features: [
+      'Real-time progress tracking',
+      'Chapter-by-chapter parsing', 
+      'Metadata extraction',
+      'Rate-limited requests',
+      'Error recovery',
+      'Multiple parser support',
+      'CORS proxy handling'
+    ]
+  };
 }
 
 // Export the registry for advanced usage

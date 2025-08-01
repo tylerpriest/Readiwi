@@ -53,5 +53,5 @@ export interface ImportSource {
   features: string[];
 }
 
-// Re-export from service for convenience
-export type { ParsedBook, ParsedChapter } from '../services/import-service';
+// Re-export from parser types for convenience
+export type { ParsedBook, ParsedChapter } from './parser-types';

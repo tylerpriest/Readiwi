@@ -36,6 +36,11 @@ class LibraryService {
     }
   }
   
+  // Alias for easier usage
+  async getBook(id: number): Promise<BookWithMetadata | null> {
+    return this.getBookById(id);
+  }
+  
   async addBook(bookData: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>): Promise<number> {
     try {
       // Check if book already exists by source URL
