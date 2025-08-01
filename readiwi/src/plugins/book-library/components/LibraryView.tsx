@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/core/utils/cn';
 import { useLibraryStore } from '../stores/library-store';
 import BookCard from './BookCard';
-import { Grid, List, Search, Plus, Settings } from 'lucide-react';
+import { Grid, List, Search, Plus, Settings, Rows3 } from 'lucide-react';
 
 interface LibraryViewProps {
   className?: string; // @description Additional CSS classes
@@ -140,14 +140,26 @@ const LibraryView: React.FC<LibraryViewProps> = ({
       <div className="flex flex-col gap-4 p-6 border-b">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Your Library</h1>
-          <Button
-            onClick={handleAddBook}
-            className="flex items-center gap-2"
-            data-testid="add-book-button"
-          >
-            <Plus className="w-4 h-4" aria-hidden="true" />
-            Add Book
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/settings')}
+              className="flex items-center gap-2"
+              data-testid="settings-button"
+            >
+              <Settings className="w-4 h-4" aria-hidden="true" />
+              Settings
+            </Button>
+            <Button
+              onClick={handleAddBook}
+              className="flex items-center gap-2"
+              data-testid="add-book-button"
+            >
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              Add Book
+            </Button>
+          </div>
         </div>
 
         {/* Search and View Controls */}
@@ -195,7 +207,7 @@ const LibraryView: React.FC<LibraryViewProps> = ({
               aria-label="Compact view"
               data-testid="compact-view-button"
             >
-              <Settings className="w-4 h-4" aria-hidden="true" />
+              <Rows3 className="w-4 h-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
