@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/core/utils/cn';
 import { useReaderStore } from '../stores/reader-store';
-// import { reliablePositionTracker } from '../services/position-tracker'; // TODO: Implement full position tracking
 import { readerService } from '../services/reader-service';
+import { Chapter } from '../types/reader-types';
 import { useSettingsStore } from '@/plugins/settings/stores/settings-store';
 import ReadingSettings from '@/plugins/settings/components/ReadingSettings';
 import { 
@@ -16,7 +16,6 @@ import {
   Settings, 
   BookOpen, 
   Loader2
-  // Clock // TODO: Use for reading time display
 } from 'lucide-react';
 import AudioControls from '@/plugins/audio/components/AudioControls';
 
@@ -30,16 +29,16 @@ interface ReaderViewProps {
 }
 
 const ReaderView: React.FC<ReaderViewProps> = ({
-  bookId, // TODO: Use to load specific book
-  slug, // TODO: Use for URL validation
-  chapterId, // TODO: Use to load specific chapter
-  chapterSlug, // TODO: Use for chapter URL validation
+  bookId,
+  slug,
+  chapterId,
+  chapterSlug,
   className,
   'data-testid': testId,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   
-  // Log URL parameters for debugging (TODO: Use for URL validation and chapter loading)
+  // Log URL parameters for debugging
   React.useEffect(() => {
     console.log(`Reader loaded for book ${bookId}${slug ? ` (${slug})` : ''}${chapterId ? `, chapter ${chapterId}` : ''}${chapterSlug ? ` (${chapterSlug})` : ''}`);
   }, [bookId, slug, chapterId, chapterSlug]);
@@ -53,8 +52,6 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     loading,
     error,
     isSettingsVisible,
-    // nextChapter, // Using custom handleNextChapter instead
-    // previousChapter, // Using custom handlePreviousChapter instead
     loadBook,
     updatePosition,
     toggleSettings,
@@ -93,7 +90,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     if (!currentChapter || !chapters) return;
     
     // Find current chapter index  
-    const currentIndex = chapters.findIndex((c: any) => c.id === currentChapter.id);
+    const currentIndex = chapters.findIndex((c: Chapter) => c.id === currentChapter.id);
     
     if (currentIndex < chapters.length - 1) {
       const nextChapterData = chapters[currentIndex + 1];
@@ -113,7 +110,7 @@ const ReaderView: React.FC<ReaderViewProps> = ({
     if (!currentChapter || !chapters) return;
     
     // Find current chapter index  
-    const currentIndex = chapters.findIndex((c: any) => c.id === currentChapter.id);
+    const currentIndex = chapters.findIndex((c: Chapter) => c.id === currentChapter.id);
     
     if (currentIndex > 0) {
       const prevChapterData = chapters[currentIndex - 1];

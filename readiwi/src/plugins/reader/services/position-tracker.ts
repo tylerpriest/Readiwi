@@ -108,7 +108,7 @@ export class ReliablePositionTracker {
       try {
         const offset = strategy.findPosition(content, fingerprint);
         if (offset !== null && offset >= 0 && offset <= content.length) {
-          const confidence = this.calculateConfidence(content, offset, fingerprint, strategy);
+          const confidence = this.calculateConfidence(content, offset, fingerprint);
           candidates.push({
             offset,
             confidence: confidence * strategy.weight,
@@ -220,8 +220,7 @@ export class ReliablePositionTracker {
   private calculateConfidence(
     content: string, 
     offset: number, 
-    originalFingerprint: TextFingerprint,
-    _strategy: PositionStrategy
+    originalFingerprint: TextFingerprint
   ): number {
     try {
       const newFingerprint = this.createFingerprint(content, offset);
@@ -240,7 +239,7 @@ export class ReliablePositionTracker {
       
       // Return confidence only if it meets minimum threshold
       return confidence >= this.MIN_CONFIDENCE ? confidence : 0;
-    } catch (_error) {
+    } catch {
       return 0;
     }
   }

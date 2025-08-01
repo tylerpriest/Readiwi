@@ -206,7 +206,7 @@ export abstract class BaseParser {
         this.lastRequestTime = Date.now();
         return await response.text();
       }
-    } catch (error) {
+    } catch {
       // Direct fetch failed, try proxies
       console.log(`Direct fetch failed for ${url}, trying CORS proxies...`);
     }
